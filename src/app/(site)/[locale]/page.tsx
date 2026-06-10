@@ -13,7 +13,9 @@ import {
   siteSettingsQuery,
 } from "@/sanity/lib/queries";
 
-type SiteSettings = { email?: string; title?: string } | null;
+import type { HeaderSettings } from "@/components/site/site-header";
+
+type SiteSettings = (HeaderSettings & { email?: string }) | null;
 
 export default async function Home({
   params,
@@ -30,11 +32,12 @@ export default async function Home({
     sanityFetch({ query: siteSettingsQuery, params: queryParams }),
   ]);
 
-  const email = (settings.data as SiteSettings)?.email;
+  const site = settings.data as SiteSettings;
+  const email = site?.email;
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader settings={site ?? undefined} />
       <main>
         <Hero />
         <Services services={services.data as React.ComponentProps<typeof Services>["services"]} />

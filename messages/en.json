@@ -1,17 +1,16 @@
 {
   "nav": {
+    "about": "About us",
     "services": "Services",
-    "work": "Work",
-    "about": "About",
-    "contact": "Contact",
-    "startProject": "Start a project"
+    "content": "Content",
+    "cta": "Get advice"
   },
   "hero": {
-    "badge": "Digital agency",
-    "title": "We craft brands that move the world forward.",
-    "subtitle": "ecsight is a digital agency building bold brands, products, and experiences for ambitious teams.",
-    "ctaPrimary": "Start a project",
-    "ctaSecondary": "See our work"
+    "badge": "Ecsight Group",
+    "titleLine1": "One Partner To Launch",
+    "titleLine2": "From Insight To Execution",
+    "subtitle": "Empowering your business and people for what's next — with deep solutions, professional training, and technology that fits.",
+    "cta": "Start with a consultation"
   },
   "services": {
     "kicker": "What we do",

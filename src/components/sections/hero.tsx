@@ -2,76 +2,106 @@
 
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
+import { FiImage } from "react-icons/fi";
+
+import { LogoMark } from "@/components/site/logo";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
+const cards = [
+  { left: "-14%", top: 120, rotate: -10, height: 420, width: 460 },
+  { left: "8%", top: 64, rotate: -5, height: 480, width: 500 },
+  { left: "50%", top: 0, rotate: 0, height: 620, width: 460, center: true },
+  { left: "66%", top: 64, rotate: 5, height: 480, width: 500 },
+  { left: "92%", top: 120, rotate: 10, height: 420, width: 460 },
+];
+
 export function Hero() {
   const t = useTranslations("hero");
-  const words = t("title").split(" ");
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden px-6 pt-16">
+    <section className="relative overflow-hidden bg-background px-6 pt-44 md:pt-52">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-60"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[70%]"
         style={{
           background:
-            "radial-gradient(60% 60% at 70% 20%, color-mix(in oklab, var(--primary) 30%, transparent), transparent)",
+            "radial-gradient(75% 90% at 50% 115%, color-mix(in oklab, var(--primary) 90%, transparent), color-mix(in oklab, var(--primary) 35%, transparent) 55%, transparent 80%)",
         }}
       />
-      <div className="mx-auto w-full max-w-6xl">
+
+      <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: easeOut }}
-          className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-xs uppercase tracking-widest text-foreground/70"
+          className="flex items-center gap-3"
         >
-          <span className="size-1.5 rounded-full bg-primary" />
-          {t("badge")}
+          <LogoMark className="size-12 text-2xl" />
+          <span className="font-heading text-2xl font-medium md:text-3xl">
+            {t("badge")}
+          </span>
         </motion.span>
 
-        <h1 className="mt-6 max-w-4xl text-balance text-5xl font-semibold leading-[1.1] tracking-tight md:text-7xl">
-          {words.map((w, i) => (
-            <motion.span
-              key={`${w}-${i}`}
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 + i * 0.05, ease: easeOut }}
-              className="inline-block pr-[0.25em]"
-            >
-              {w}
-            </motion.span>
-          ))}
+        <h1 className="mt-10 text-balance text-5xl leading-[1.12] tracking-tight md:text-7xl">
+          <motion.span
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: easeOut }}
+            className="block"
+          >
+            {t("titleLine1")}
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: easeOut }}
+            className="block text-foreground/55"
+          >
+            {t("titleLine2")}
+          </motion.span>
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5, ease: easeOut }}
-          className="mt-8 max-w-xl text-lg text-foreground/70"
+          className="mt-8 max-w-2xl text-pretty text-base text-foreground/80 md:text-lg"
         >
           {t("subtitle")}
         </motion.p>
 
-        <motion.div
+        <motion.a
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
-          className="mt-10 flex flex-wrap items-center gap-4"
+          href="#contact"
+          className="mt-12 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-lg shadow-primary/30 transition-opacity hover:opacity-90"
         >
-          <a
-            href="#contact"
-            className="rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+          {t("cta")}
+        </motion.a>
+      </div>
+
+      <div className="relative mx-auto mt-24 h-[420px] max-w-7xl md:h-[520px]">
+        {cards.map((c, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 80, rotate: c.rotate }}
+            animate={{ opacity: 1, y: 0, rotate: c.rotate }}
+            transition={{ duration: 0.9, delay: 0.5 + i * 0.08, ease: easeOut }}
+            className="absolute flex items-center justify-center rounded-3xl bg-[#d7d7d7]"
+            style={{
+              left: c.left,
+              top: c.top,
+              width: c.width,
+              height: c.height,
+              transform: c.center ? "translateX(-50%)" : undefined,
+              zIndex: c.center ? 10 : 1,
+            }}
           >
-            {t("ctaPrimary")}
-          </a>
-          <a
-            href="#work"
-            className="rounded-full border border-white/15 px-6 py-3 text-sm font-medium transition-colors hover:bg-white/5"
-          >
-            {t("ctaSecondary")}
-          </a>
-        </motion.div>
+            {c.center ? <FiImage className="size-24 text-black/25" /> : null}
+          </motion.div>
+        ))}
       </div>
     </section>
   );

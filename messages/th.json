@@ -1,17 +1,16 @@
 {
   "nav": {
-    "services": "บริการ",
-    "work": "ผลงาน",
     "about": "เกี่ยวกับเรา",
-    "contact": "ติดต่อ",
-    "startProject": "เริ่มโปรเจกต์"
+    "services": "บริการ",
+    "content": "คอนเทนต์",
+    "cta": "รับคำแนะนำ"
   },
   "hero": {
-    "badge": "ดิจิทัลเอเจนซี่",
-    "title": "We craft brands that move the world forward.",
-    "subtitle": "ecsight คือดิจิทัลเอเจนซี่ที่สร้างแบรนด์ ผลิตภัณฑ์ และประสบการณ์ที่โดดเด่นสำหรับทีมที่มีความทะเยอทะยาน",
-    "ctaPrimary": "เริ่มโปรเจกต์",
-    "ctaSecondary": "ดูผลงานของเรา"
+    "badge": "Ecsight Group",
+    "titleLine1": "One Partner To Launch",
+    "titleLine2": "From Insight To Execution",
+    "subtitle": "พัฒนาศักยภาพธุรกิจและบุคลากรให้พร้อมรับมือกับอนาคต ด้วยโซลูชันเชิงลึก การอบรมระดับมืออาชีพ และเทคโนโลยีที่เหมาะสมกับธุรกิจ",
+    "cta": "เริ่มต้นรับคำแนะนำ"
   },
   "services": {
     "kicker": "สิ่งที่เราทำ",

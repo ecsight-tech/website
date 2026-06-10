@@ -15,7 +15,7 @@ import type { IconType } from "react-icons";
 
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { LogoMark } from "./logo";
+import { LogoInline } from "./logo";
 
 const socialIcons: Record<string, IconType> = {
   facebook: FaFacebookF,
@@ -96,11 +96,8 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
 
       <div className="border-b border-white/10 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <LogoMark className="size-8 text-lg" />
-            <span className="font-heading text-xl font-semibold tracking-tight">
-              Ecsight
-            </span>
+          <Link href="/" className="flex items-center">
+            <LogoInline className="h-7" />
           </Link>
           <nav className="hidden items-center gap-10 md:flex">
             {nav.map((n) => (

@@ -37,7 +37,7 @@ export function Hero() {
           transition={{ duration: 0.6, ease: easeOut }}
           className="flex items-center gap-3"
         >
-          <LogoMark className="size-12 text-2xl" />
+          <LogoMark className="size-12" />
           <span className="font-heading text-2xl font-medium md:text-3xl">
             {t("badge")}
           </span>

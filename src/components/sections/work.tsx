@@ -20,7 +20,7 @@ export function Work({ projects }: { projects?: Project[] }) {
   return (
     <section id="work" className="px-6 py-28">
       <div className="grid w-full gap-16 lg:grid-cols-[1fr_3fr] max-w-7xl mx-auto">
-        <div className="self-start lg:sticky lg:top-[calc(50%-4rem)]">
+        <div className="self-start lg:sticky lg:top-[calc(50%-10rem)]">
           <h2 className="text-4xl tracking-tight md:text-6xl">
             {t("heading")}
           </h2>

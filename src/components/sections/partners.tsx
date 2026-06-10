@@ -56,7 +56,7 @@ export function Partners({ partners }: { partners?: Partner[] }) {
           {partners.map((p) => (
             <article
               key={p._id}
-              className="relative flex h-[460px] w-[400px] shrink-0 flex-col overflow-hidden rounded-4xl bg-white/[0.04] p-8"
+              className="relative flex h-[580px] w-[500px] shrink-0 flex-col overflow-hidden rounded-4xl bg-white/[0.04] p-10"
               style={{
                 backgroundImage:
                   "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
@@ -78,10 +78,10 @@ export function Partners({ partners }: { partners?: Partner[] }) {
                     alt={p.name}
                     width={56}
                     height={56}
-                    className="size-14 rounded-full object-cover"
+                    className="size-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="size-14 rounded-full bg-[#d9d9d9]" />
+                  <div className="size-16 rounded-full bg-[#d9d9d9]" />
                 )}
                 <h3 className="mt-6 font-heading text-3xl font-medium">
                   {p.name}

@@ -87,12 +87,12 @@ export function Partners({ partners }: { partners?: Partner[] }) {
                   {p.name}
                 </h3>
                 {p.industry ? (
-                  <p className="mt-1 text-2xl text-foreground/75">
+                  <p className="mt-1 text-xl text-foreground/75">
                     {p.industry}
                   </p>
                 ) : null}
                 {p.description ? (
-                  <p className="mt-6 text-lg leading-relaxed text-foreground/55">
+                  <p className="mt-6 text-xl leading-relaxed text-foreground/55">
                     {p.description}
                   </p>
                 ) : null}

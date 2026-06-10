@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { FiImage } from "react-icons/fi";
 
+import Aurora from "@/components/Aurora";
 import { LogoMark } from "@/components/site/logo";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
@@ -20,15 +21,17 @@ export function Hero() {
   const t = useTranslations("hero");
 
   return (
-    <section className="relative overflow-hidden bg-background px-6 pt-44 md:pt-52">
+    <section className="relative overflow-hidden px-6 pt-20 md:pt-28">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[70%]"
-        style={{
-          background:
-            "radial-gradient(75% 90% at 50% 115%, color-mix(in oklab, var(--primary) 90%, transparent), color-mix(in oklab, var(--primary) 35%, transparent) 55%, transparent 80%)",
-        }}
-      />
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[80%]"
+      >
+        <Aurora
+          colorStops={["#1F44E8", "#4D6BFF", "#1F44E8"]}
+          amplitude={1.0}
+          blend={0.6}
+        />
+      </div>
 
       <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
         <motion.span
@@ -66,7 +69,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5, ease: easeOut }}
-          className="mt-8 max-w-2xl text-pretty text-base text-foreground/80 md:text-lg"
+          className="mt-8 max-w-2xl text-pretty text-base text-foreground/80 md:text-xl"
         >
           {t("subtitle")}
         </motion.p>
@@ -76,7 +79,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
           href="#contact"
-          className="mt-12 rounded-full bg-primary px-8 py-4 text-base font-medium text-primary-foreground shadow-lg shadow-primary/30 transition-opacity hover:opacity-90"
+          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 transition-opacity hover:opacity-90"
         >
           {t("cta")}
         </motion.a>

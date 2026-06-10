@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "services": "บริการ",
+    "work": "ผลงาน",
+    "about": "เกี่ยวกับเรา",
+    "contact": "ติดต่อ",
+    "startProject": "เริ่มโปรเจกต์"
+  },
+  "hero": {
+    "badge": "ดิจิทัลเอเจนซี่",
+    "title": "We craft brands that move the world forward.",
+    "subtitle": "ecsight คือดิจิทัลเอเจนซี่ที่สร้างแบรนด์ ผลิตภัณฑ์ และประสบการณ์ที่โดดเด่นสำหรับทีมที่มีความทะเยอทะยาน",
+    "ctaPrimary": "เริ่มโปรเจกต์",
+    "ctaSecondary": "ดูผลงานของเรา"
+  },
+  "services": {
+    "kicker": "สิ่งที่เราทำ",
+    "heading": "Services built for momentum"
+  },
+  "work": {
+    "kicker": "ผลงานที่คัดสรร",
+    "heading": "Recent projects"
+  },
+  "cta": {
+    "heading": "Let's build something worth remembering.",
+    "subtitle": "เล่าให้เราฟังเกี่ยวกับโปรเจกต์ของคุณ เราตอบกลับภายในหนึ่งวันทำการ",
+    "button": "ติดต่อเรา"
+  },
+  "footer": {
+    "rights": "สงวนลิขสิทธิ์"
+  }
+}

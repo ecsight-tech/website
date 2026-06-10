@@ -15,12 +15,19 @@ import {
 
 type SiteSettings = { email?: string; title?: string } | null;
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const queryParams = { locale };
+
   const [services, projects, testimonials, settings] = await Promise.all([
-    sanityFetch({ query: servicesQuery }),
-    sanityFetch({ query: featuredProjectsQuery }),
-    sanityFetch({ query: testimonialsQuery }),
-    sanityFetch({ query: siteSettingsQuery }),
+    sanityFetch({ query: servicesQuery, params: queryParams }),
+    sanityFetch({ query: featuredProjectsQuery, params: queryParams }),
+    sanityFetch({ query: testimonialsQuery, params: queryParams }),
+    sanityFetch({ query: siteSettingsQuery, params: queryParams }),
   ]);
 
   const email = (settings.data as SiteSettings)?.email;

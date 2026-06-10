@@ -6,11 +6,11 @@ export const siteSettings = defineType({
   type: "document",
   fields: [
     defineField({ name: "title", type: "string" }),
-    defineField({ name: "description", type: "text", rows: 3 }),
+    defineField({ name: "description", type: "localeText" }),
     defineField({ name: "logo", type: "image" }),
     defineField({ name: "email", type: "string" }),
     defineField({ name: "phone", type: "string" }),
-    defineField({ name: "address", type: "text", rows: 2 }),
+    defineField({ name: "address", type: "localeString" }),
     defineField({
       name: "socials",
       type: "array",

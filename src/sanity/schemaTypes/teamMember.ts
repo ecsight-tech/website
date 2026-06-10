@@ -10,13 +10,13 @@ export const teamMember = defineType({
       type: "string",
       validation: (r) => r.required(),
     }),
-    defineField({ name: "role", type: "string" }),
+    defineField({ name: "role", type: "localeString" }),
     defineField({
       name: "photo",
       type: "image",
       options: { hotspot: true },
     }),
-    defineField({ name: "bio", type: "text", rows: 4 }),
+    defineField({ name: "bio", type: "localeText" }),
     defineField({
       name: "socials",
       type: "array",
@@ -32,5 +32,5 @@ export const teamMember = defineType({
     }),
     defineField({ name: "order", type: "number" }),
   ],
-  preview: { select: { title: "name", subtitle: "role", media: "photo" } },
+  preview: { select: { title: "name", subtitle: "role.en", media: "photo" } },
 });

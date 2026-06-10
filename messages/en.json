@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "services": "Services",
+    "work": "Work",
+    "about": "About",
+    "contact": "Contact",
+    "startProject": "Start a project"
+  },
+  "hero": {
+    "badge": "Digital agency",
+    "title": "We craft brands that move the world forward.",
+    "subtitle": "ecsight is a digital agency building bold brands, products, and experiences for ambitious teams.",
+    "ctaPrimary": "Start a project",
+    "ctaSecondary": "See our work"
+  },
+  "services": {
+    "kicker": "What we do",
+    "heading": "Services built for momentum"
+  },
+  "work": {
+    "kicker": "Selected work",
+    "heading": "Recent projects"
+  },
+  "cta": {
+    "heading": "Let's build something worth remembering.",
+    "subtitle": "Tell us about your project. We reply within one business day.",
+    "button": "Get in touch"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}

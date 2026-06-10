@@ -7,18 +7,18 @@ export const service = defineType({
   fields: [
     defineField({
       name: "title",
-      type: "string",
+      type: "localeString",
       validation: (r) => r.required(),
     }),
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "title" },
+      options: { source: "title.en" },
       validation: (r) => r.required(),
     }),
     defineField({ name: "icon", type: "string", description: "Icon name (lucide)" }),
-    defineField({ name: "summary", type: "text", rows: 3 }),
-    defineField({ name: "body", type: "blockContent" }),
+    defineField({ name: "summary", type: "localeText" }),
+    defineField({ name: "body", type: "localeBlockContent" }),
     defineField({
       name: "order",
       type: "number",
@@ -28,5 +28,5 @@ export const service = defineType({
   orderings: [
     { title: "Manual order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
-  preview: { select: { title: "title", subtitle: "summary" } },
+  preview: { select: { title: "title.en", subtitle: "summary.en" } },
 });

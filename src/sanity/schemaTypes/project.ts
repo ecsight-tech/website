@@ -7,13 +7,13 @@ export const project = defineType({
   fields: [
     defineField({
       name: "title",
-      type: "string",
+      type: "localeString",
       validation: (r) => r.required(),
     }),
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "title" },
+      options: { source: "title.en" },
       validation: (r) => r.required(),
     }),
     defineField({ name: "client", type: "string" }),
@@ -35,8 +35,8 @@ export const project = defineType({
       type: "array",
       of: [{ type: "image", options: { hotspot: true } }],
     }),
-    defineField({ name: "excerpt", type: "text", rows: 3 }),
-    defineField({ name: "body", type: "blockContent" }),
+    defineField({ name: "excerpt", type: "localeText" }),
+    defineField({ name: "body", type: "localeBlockContent" }),
     defineField({ name: "services", type: "array", of: [{ type: "string" }] }),
     defineField({ name: "year", type: "number" }),
     defineField({ name: "url", type: "url", title: "Live URL" }),
@@ -51,6 +51,6 @@ export const project = defineType({
     { title: "Newest", name: "pubDesc", by: [{ field: "publishedAt", direction: "desc" }] },
   ],
   preview: {
-    select: { title: "title", subtitle: "client", media: "coverImage" },
+    select: { title: "title.en", subtitle: "client", media: "coverImage" },
   },
 });

@@ -7,12 +7,11 @@ export const testimonial = defineType({
   fields: [
     defineField({
       name: "quote",
-      type: "text",
-      rows: 4,
+      type: "localeText",
       validation: (r) => r.required(),
     }),
     defineField({ name: "author", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "role", type: "string" }),
+    defineField({ name: "role", type: "localeString" }),
     defineField({ name: "company", type: "string" }),
     defineField({ name: "avatar", type: "image", options: { hotspot: true } }),
     defineField({ name: "featured", type: "boolean", initialValue: false }),

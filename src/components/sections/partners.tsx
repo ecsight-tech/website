@@ -73,17 +73,27 @@ export function Partners({ partners }: { partners?: Partner[] }) {
               />
               <div className="relative">
                 {p.logo ? (
-                  <Image
-                    src={urlFor(p.logo).width(112).height(112).url()}
-                    alt={p.name}
-                    width={56}
-                    height={56}
-                    className="size-16 rounded-full object-cover"
-                  />
+                  <div className="flex items-center justify-center size-20">
+                    <Image
+                      src={urlFor(p.logo).width(112).height(112).url()}
+                      alt={p.name}
+                      width={56}
+                      height={56}
+                      className="w-full object-cover"
+                    />
+                  </div>
                 ) : (
-                  <div className="size-16 rounded-full bg-[#d9d9d9]" />
+                  <div className="flex items-center justify-center size-20">
+                    <Image
+                      src={"/dataechooo_logo.png"}
+                      alt={p.name}
+                      width={56}
+                      height={56}
+                      className="size-20 rounded-full object-cover"
+                    />
+                  </div>
                 )}
-                <h3 className="mt-6 font-heading text-3xl font-medium">
+                <h3 className="mt-8 font-heading text-3xl font-medium">
                   {p.name}
                 </h3>
                 {p.industry ? (

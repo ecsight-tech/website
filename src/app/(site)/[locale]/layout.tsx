@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 
 import { routing } from "@/i18n/routing";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { SanityLive } from "@/sanity/lib/live";
 import "../../globals.css";
 
@@ -51,6 +52,7 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full bg-background font-sans text-foreground">
         <NextIntlClientProvider>
+          <SmoothScroll />
           {children}
           <SanityLive />
         </NextIntlClientProvider>

@@ -95,11 +95,11 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
       </div>
 
       <div className="border-b border-white/10 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto h-16 max-w-7xl items-center justify-between px-6 grid grid-cols-3">
           <Link href="/" className="flex items-center">
             <LogoInline className="h-7" />
           </Link>
-          <nav className="hidden items-center gap-10 md:flex">
+          <nav className="hidden items-center gap-10 md:flex justify-center">
             {nav.map((n) => (
               <a
                 key={n.href}
@@ -110,7 +110,7 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
               </a>
             ))}
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 justify-end">
             <div className="flex items-center gap-1 text-base uppercase">
               {routing.locales.map((l) => (
                 <Link

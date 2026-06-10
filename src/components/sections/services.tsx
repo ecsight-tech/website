@@ -25,7 +25,7 @@ export function Services({ services }: { services?: Service[] }) {
           </h2>
         </FadeIn>
 
-        <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
             <StaggerItem
               key={s._id}

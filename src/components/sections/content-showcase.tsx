@@ -22,7 +22,9 @@ function ShowcaseCard({ item }: { item: ShowcaseItem }) {
       {item.videoUrl ? (
         <video
           src={item.videoUrl}
-          poster={item.poster ? urlFor(item.poster).width(800).url() : undefined}
+          poster={
+            item.poster ? urlFor(item.poster).width(800).url() : undefined
+          }
           autoPlay
           muted
           loop
@@ -67,7 +69,7 @@ export function ContentShowcase({ items }: { items?: ShowcaseItem[] }) {
       <div className="mt-16">
         <Marquee speed={60} pauseOnHover autoFill>
           {items.map((item) => (
-            <div key={item._id} className="mr-8">
+            <div key={item._id} className="mr-4">
               <ShowcaseCard item={item} />
             </div>
           ))}

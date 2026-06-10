@@ -51,7 +51,7 @@ export function Partners({ partners }: { partners?: Partner[] }) {
         <motion.div
           ref={trackRef}
           style={{ x }}
-          className="mt-14 flex gap-6 pl-6 md:pl-12"
+          className="mt-14 flex gap-4 pl-6 md:pl-12"
         >
           {partners.map((p) => (
             <article

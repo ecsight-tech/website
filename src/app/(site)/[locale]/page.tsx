@@ -69,13 +69,13 @@ export default async function Home({
             >["items"]
           }
         />
-        <Testimonials
+        {/* <Testimonials
           items={
             testimonials.data as React.ComponentProps<
               typeof Testimonials
             >["items"]
           }
-        />
+        /> */}
         <CTA email={email} />
       </main>
       <SiteFooter email={email} />

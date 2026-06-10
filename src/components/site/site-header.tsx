@@ -51,7 +51,7 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="sticky -top-9 z-50"
     >
-      <div className="border-b border-white/10 bg-background text-xs text-foreground/80">
+      <div className="border-b border-white/10 bg-background text-sm text-foreground/80">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-4 px-6">
           <div className="flex items-center gap-5 overflow-hidden whitespace-nowrap">
             {settings?.title ? <span>{settings.title}</span> : null}
@@ -104,14 +104,14 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
               <a
                 key={n.href}
                 href={n.href}
-                className="text-sm text-foreground/80 transition-colors hover:text-foreground"
+                className="text-base text-foreground/80 transition-colors hover:text-foreground"
               >
                 {n.label}
               </a>
             ))}
           </nav>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1 text-xs uppercase">
+            <div className="flex items-center gap-1 text-base uppercase">
               {routing.locales.map((l) => (
                 <Link
                   key={l}
@@ -119,8 +119,8 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
                   locale={l}
                   className={
                     l === locale
-                      ? "rounded-full bg-white/10 px-2.5 py-1 font-medium text-foreground"
-                      : "rounded-full px-2.5 py-1 text-foreground/50 transition-colors hover:text-foreground"
+                      ? "rounded-full bg-white/10 px-2.5 py-1 font-medium text-foreground transition-colors duration-200 hover:bg-white/20"
+                      : "rounded-full px-2.5 py-1 text-foreground/50 transition-all duration-200 hover:bg-white/5 hover:text-foreground active:scale-95"
                   }
                 >
                   {l}
@@ -129,7 +129,7 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
             </div>
             <a
               href="#contact"
-              className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:block"
+              className="hidden rounded-full bg-primary px-5 py-2.5 text-base font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:block"
             >
               {t("cta")}
             </a>

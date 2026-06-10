@@ -16,6 +16,7 @@ export const project = defineType({
       options: { source: "title.en" },
       validation: (r) => r.required(),
     }),
+    defineField({ name: "subtitle", type: "localeText" }),
     defineField({ name: "client", type: "string" }),
     defineField({
       name: "category",

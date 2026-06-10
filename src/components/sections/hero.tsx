@@ -13,7 +13,15 @@ const easeOut = [0.16, 1, 0.3, 1] as const;
 const cards = [
   { left: "-14%", top: 120, rotate: -10, height: 420, width: 460, depth: 2 },
   { left: "8%", top: 64, rotate: -5, height: 480, width: 500, depth: 1 },
-  { left: "50%", top: 0, rotate: 0, height: 620, width: 460, depth: 0, center: true },
+  {
+    left: "50%",
+    top: 0,
+    rotate: 0,
+    height: 620,
+    width: 460,
+    depth: 0,
+    center: true,
+  },
   { left: "66%", top: 64, rotate: 5, height: 480, width: 500, depth: 1 },
   { left: "92%", top: 120, rotate: 10, height: 420, width: 460, depth: 2 },
 ];
@@ -30,9 +38,9 @@ export function Hero() {
   const textY = useTransform(scrollYProgress, [0, 1], [0, 160]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.2]);
   const auroraY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const centerY = useTransform(scrollYProgress, [0, 1], [0, -40]);
-  const midY = useTransform(scrollYProgress, [0, 1], [0, -110]);
-  const outerY = useTransform(scrollYProgress, [0, 1], [0, -190]);
+  const centerY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const midY = useTransform(scrollYProgress, [0, 1], [0, 110]);
+  const outerY = useTransform(scrollYProgress, [0, 1], [0, 190]);
   const depthY = [centerY, midY, outerY];
 
   return (
@@ -101,7 +109,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
           href="#contact"
-          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] transition-opacity hover:opacity-90"
+          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
         >
           {t("cta")}
         </motion.a>
@@ -125,7 +133,11 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 80, rotate: c.rotate }}
               animate={{ opacity: 1, y: 0, rotate: c.rotate }}
-              transition={{ duration: 0.9, delay: 0.5 + i * 0.08, ease: easeOut }}
+              transition={{
+                duration: 0.9,
+                delay: 0.5 + i * 0.08,
+                ease: easeOut,
+              }}
               className="flex size-full items-center justify-center rounded-3xl bg-[#d7d7d7]"
             >
               {c.center ? <FiImage className="size-24 text-black/25" /> : null}

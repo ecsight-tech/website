@@ -3,22 +3,24 @@
     "about": "About us",
     "services": "Services",
     "content": "Content",
-    "cta": "Get advice"
+    "cta": "Get in touch"
   },
   "hero": {
     "badge": "Ecsight Group",
     "titleLine1": "One Partner To Launch",
     "titleLine2": "From Insight To Execution",
     "subtitle": "Empowering your business and people for what's next — with deep solutions, professional training, and technology that fits.",
-    "cta": "Start with a consultation"
+    "cta": "Get in touch"
   },
   "services": {
     "kicker": "What we do",
     "heading": "Services built for momentum"
   },
   "work": {
-    "kicker": "Selected work",
-    "heading": "Recent projects"
+    "heading": "Our Projects",
+    "viewAll": "View all work",
+    "viewMoreTitle": "View More",
+    "viewMoreCaption": "See everything we've made"
   },
   "cta": {
     "heading": "Let's build something worth remembering.",

@@ -24,6 +24,7 @@ export const featuredProjectsQuery = groq`
     "slug": slug.current,
     client, category, coverImage, year,
     "title": coalesce(title.en, title),
+    "subtitle": coalesce(subtitle[$locale], subtitle.en, subtitle),
     "excerpt": coalesce(excerpt[$locale], excerpt.en, excerpt)
   }
 `;

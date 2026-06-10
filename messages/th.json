@@ -17,8 +17,10 @@
     "heading": "Services built for momentum"
   },
   "work": {
-    "kicker": "ผลงานที่คัดสรร",
-    "heading": "Recent projects"
+    "heading": "Our Projects",
+    "viewAll": "ดูผลงานทั้งหมด",
+    "viewMoreTitle": "View More",
+    "viewMoreCaption": "ดูผลงานของพวกเราทั้งหมด"
   },
   "cta": {
     "heading": "Let's build something worth remembering.",

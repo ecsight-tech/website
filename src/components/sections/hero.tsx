@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useTranslations } from "next-intl";
 import { FiImage } from "react-icons/fi";
 
@@ -10,20 +11,38 @@ import { LogoMark } from "@/components/site/logo";
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
 const cards = [
-  { left: "-14%", top: 120, rotate: -10, height: 420, width: 460 },
-  { left: "8%", top: 64, rotate: -5, height: 480, width: 500 },
-  { left: "50%", top: 0, rotate: 0, height: 620, width: 460, center: true },
-  { left: "66%", top: 64, rotate: 5, height: 480, width: 500 },
-  { left: "92%", top: 120, rotate: 10, height: 420, width: 460 },
+  { left: "-14%", top: 120, rotate: -10, height: 420, width: 460, depth: 2 },
+  { left: "8%", top: 64, rotate: -5, height: 480, width: 500, depth: 1 },
+  { left: "50%", top: 0, rotate: 0, height: 620, width: 460, depth: 0, center: true },
+  { left: "66%", top: 64, rotate: 5, height: 480, width: 500, depth: 1 },
+  { left: "92%", top: 120, rotate: 10, height: 420, width: 460, depth: 2 },
 ];
 
 export function Hero() {
   const t = useTranslations("hero");
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.2]);
+  const auroraY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const centerY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const midY = useTransform(scrollYProgress, [0, 1], [0, -110]);
+  const outerY = useTransform(scrollYProgress, [0, 1], [0, -190]);
+  const depthY = [centerY, midY, outerY];
+
   return (
-    <section className="relative overflow-hidden px-6 pt-20 md:pt-28">
-      <div
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden px-6 pt-20 md:pt-28"
+    >
+      <motion.div
         aria-hidden
+        style={{ y: auroraY }}
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[80%]"
       >
         <Aurora
@@ -31,9 +50,12 @@ export function Hero() {
           amplitude={1.0}
           blend={0.6}
         />
-      </div>
+      </motion.div>
 
-      <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+      <motion.div
+        style={{ y: textY, opacity: textOpacity }}
+        className="mx-auto flex max-w-5xl flex-col items-center text-center"
+      >
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,30 +101,35 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
           href="#contact"
-          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 transition-opacity hover:opacity-90"
+          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] transition-opacity hover:opacity-90"
         >
           {t("cta")}
         </motion.a>
-      </div>
+      </motion.div>
 
       <div className="relative mx-auto mt-24 h-[420px] max-w-7xl md:h-[520px]">
         {cards.map((c, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 80, rotate: c.rotate }}
-            animate={{ opacity: 1, y: 0, rotate: c.rotate }}
-            transition={{ duration: 0.9, delay: 0.5 + i * 0.08, ease: easeOut }}
-            className="absolute flex items-center justify-center rounded-3xl bg-[#d7d7d7]"
             style={{
+              y: depthY[c.depth],
               left: c.left,
               top: c.top,
               width: c.width,
               height: c.height,
-              transform: c.center ? "translateX(-50%)" : undefined,
+              x: c.center ? "-50%" : 0,
               zIndex: c.center ? 10 : 1,
             }}
+            className="absolute"
           >
-            {c.center ? <FiImage className="size-24 text-black/25" /> : null}
+            <motion.div
+              initial={{ opacity: 0, y: 80, rotate: c.rotate }}
+              animate={{ opacity: 1, y: 0, rotate: c.rotate }}
+              transition={{ duration: 0.9, delay: 0.5 + i * 0.08, ease: easeOut }}
+              className="flex size-full items-center justify-center rounded-3xl bg-[#d7d7d7]"
+            >
+              {c.center ? <FiImage className="size-24 text-black/25" /> : null}
+            </motion.div>
           </motion.div>
         ))}
       </div>

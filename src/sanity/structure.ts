@@ -12,6 +12,7 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem("project").title("Projects"),
       S.documentTypeListItem("service").title("Services"),
+      S.documentTypeListItem("partner").title("Partners"),
       S.documentTypeListItem("teamMember").title("Team"),
       S.documentTypeListItem("testimonial").title("Testimonials"),
     ]);

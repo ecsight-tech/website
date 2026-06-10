@@ -63,3 +63,11 @@ export const testimonialsQuery = groq`
     "role": coalesce(role[$locale], role.en, role)
   }
 `;
+
+export const partnersQuery = groq`
+  *[_type == "partner"] | order(order asc) {
+    _id, name, logo,
+    "industry": coalesce(industry[$locale], industry.en, industry),
+    "description": coalesce(description[$locale], description.en, description)
+  }
+`;

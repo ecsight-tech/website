@@ -41,7 +41,7 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
   const nav = [
     { href: "#about", label: t("about") },
     { href: "#services", label: t("services") },
-    { href: "#work", label: t("content") },
+    { href: "#content", label: t("content") },
   ];
 
   return (

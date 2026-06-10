@@ -8,6 +8,7 @@ import {
 } from "./locale";
 import { service } from "./service";
 import { partner } from "./partner";
+import { showcase } from "./showcase";
 import { project } from "./project";
 import { teamMember } from "./teamMember";
 import { testimonial } from "./testimonial";
@@ -22,6 +23,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     service,
     project,
     partner,
+    showcase,
     teamMember,
     testimonial,
     siteSettings,

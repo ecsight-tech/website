@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/site/site-footer";
 import { Hero } from "@/components/sections/hero";
 import { Services } from "@/components/sections/services";
 import { Work } from "@/components/sections/work";
+import { ContentShowcase } from "@/components/sections/content-showcase";
 import { Partners } from "@/components/sections/partners";
 import { Testimonials } from "@/components/sections/testimonials";
 import { CTA } from "@/components/sections/cta";
@@ -12,6 +13,7 @@ import {
   featuredProjectsQuery,
   testimonialsQuery,
   partnersQuery,
+  showcaseQuery,
   siteSettingsQuery,
 } from "@/sanity/lib/queries";
 
@@ -27,12 +29,13 @@ export default async function Home({
   const { locale } = await params;
   const queryParams = { locale };
 
-  const [services, projects, testimonials, partners, settings] =
+  const [services, projects, testimonials, partners, showcase, settings] =
     await Promise.all([
       sanityFetch({ query: servicesQuery, params: queryParams }),
       sanityFetch({ query: featuredProjectsQuery, params: queryParams }),
       sanityFetch({ query: testimonialsQuery, params: queryParams }),
       sanityFetch({ query: partnersQuery, params: queryParams }),
+      sanityFetch({ query: showcaseQuery, params: queryParams }),
       sanityFetch({ query: siteSettingsQuery, params: queryParams }),
     ]);
 
@@ -44,10 +47,35 @@ export default async function Home({
       <SiteHeader settings={site ?? undefined} />
       <main>
         <Hero />
-        <Services services={services.data as React.ComponentProps<typeof Services>["services"]} />
-        <Work projects={projects.data as React.ComponentProps<typeof Work>["projects"]} />
-        <Partners partners={partners.data as React.ComponentProps<typeof Partners>["partners"]} />
-        <Testimonials items={testimonials.data as React.ComponentProps<typeof Testimonials>["items"]} />
+        <Services
+          services={
+            services.data as React.ComponentProps<typeof Services>["services"]
+          }
+        />
+        <Partners
+          partners={
+            partners.data as React.ComponentProps<typeof Partners>["partners"]
+          }
+        />
+        <Work
+          projects={
+            projects.data as React.ComponentProps<typeof Work>["projects"]
+          }
+        />
+        <ContentShowcase
+          items={
+            showcase.data as React.ComponentProps<
+              typeof ContentShowcase
+            >["items"]
+          }
+        />
+        <Testimonials
+          items={
+            testimonials.data as React.ComponentProps<
+              typeof Testimonials
+            >["items"]
+          }
+        />
         <CTA email={email} />
       </main>
       <SiteFooter email={email} />

@@ -1,12 +1,15 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { FiImage } from "react-icons/fi";
 
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion-primitives";
+import { urlFor } from "@/sanity/lib/image";
 
 type Service = {
   _id: string;
   title: string;
   summary?: string;
+  image?: (Parameters<typeof urlFor>[0] & { alt?: string }) | null;
 };
 
 export function Services({ services }: { services?: Service[] }) {
@@ -28,10 +31,25 @@ export function Services({ services }: { services?: Service[] }) {
               key={s._id}
               className="group relative flex aspect-3/4 flex-col overflow-hidden rounded-4xl bg-linear-to-b from-white/[0.04] from-35% to-[#16246e] transition-transform duration-300 hover:-translate-y-1.5"
             >
-              <div className="flex flex-1 items-center justify-center">
-                <FiImage className="size-16 text-white/10" />
-              </div>
-              <h3 className="pb-12 text-center font-heading text-3xl md:text-[2.5rem]">
+              {s.image ? (
+                <Image
+                  src={urlFor(s.image).width(900).height(1200).url()}
+                  alt={s.image.alt ?? s.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex flex-1 items-center justify-center">
+                  <FiImage className="size-16 text-white/10" />
+                </div>
+              )}
+              {s.image ? (
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent"
+                />
+              ) : null}
+              <h3 className="relative mt-auto pb-12 text-center font-heading text-3xl md:text-[2.5rem]">
                 {s.title}
               </h3>
             </StaggerItem>

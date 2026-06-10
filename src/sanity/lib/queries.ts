@@ -13,6 +13,7 @@ export const servicesQuery = groq`
     _id,
     "slug": slug.current,
     icon,
+    image,
     "title": coalesce(title.en, title),
     "summary": coalesce(summary[$locale], summary.en, summary)
   }
@@ -69,5 +70,12 @@ export const partnersQuery = groq`
     _id, name, logo,
     "industry": coalesce(industry[$locale], industry.en, industry),
     "description": coalesce(description[$locale], description.en, description)
+  }
+`;
+
+export const showcaseQuery = groq`
+  *[_type == "showcase"] | order(order asc) {
+    _id, title, url, poster,
+    "videoUrl": video.asset->url
   }
 `;

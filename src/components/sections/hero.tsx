@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
+import Marquee from "react-fast-marquee";
 import { FiImage } from "react-icons/fi";
 
 import Aurora from "@/components/Aurora";
@@ -9,26 +10,13 @@ import { LogoMark } from "@/components/site/logo";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
-const cards = [
-  { left: "-14%", top: 120, rotate: -10, height: 420, width: 460 },
-  { left: "8%", top: 64, rotate: -5, height: 480, width: 500 },
-  {
-    left: "50%",
-    top: 0,
-    rotate: 0,
-    height: 620,
-    width: 460,
-    center: true,
-  },
-  { left: "66%", top: 64, rotate: 5, height: 480, width: 500 },
-  { left: "92%", top: 120, rotate: 10, height: 420, width: 460 },
-];
+const cards = [{ offset: 128 }, { offset: 0 }];
 
 export function Hero() {
   const t = useTranslations("hero");
 
   return (
-    <section className="relative overflow-hidden px-6 pt-20 md:pt-28">
+    <section className="relative overflow-hidden pt-20 md:pt-28">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[80%]"
@@ -40,7 +28,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+      <div className="mx-auto flex max-w-5xl flex-col items-center text-center px-6">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,35 +80,24 @@ export function Hero() {
         </motion.a>
       </div>
 
-      <div className="relative mx-auto mt-24 h-[420px] max-w-7xl md:h-[520px]">
-        {cards.map((c, i) => (
-          <div
-            key={i}
-            style={{
-              left: c.left,
-              top: c.top,
-              width: c.width,
-              height: c.height,
-              transform: c.center ? "translateX(-50%)" : undefined,
-              zIndex: c.center ? 10 : 1,
-            }}
-            className="absolute"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 80, rotate: c.rotate }}
-              animate={{ opacity: 1, y: 0, rotate: c.rotate }}
-              transition={{
-                duration: 0.9,
-                delay: 0.5 + i * 0.08,
-                ease: easeOut,
-              }}
-              className="flex size-full items-center justify-center rounded-3xl bg-[#d7d7d7]"
+      <motion.div
+        initial={{ opacity: 0, y: 80 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.5, ease: easeOut }}
+        className="mt-16 mb-16 h-[528px] md:h-[608px]"
+      >
+        <Marquee speed={50} autoFill>
+          {cards.map((c, i) => (
+            <div
+              key={i}
+              style={{ marginTop: c.offset }}
+              className="mx-2 flex h-[400px] w-[270px] items-center justify-center rounded-4xl bg-[#d7d7d7] md:mx-3 md:h-[480px] md:w-[320px]"
             >
-              {c.center ? <FiImage className="size-24 text-black/25" /> : null}
-            </motion.div>
-          </div>
-        ))}
-      </div>
+              <FiImage className="size-20 text-black/25" />
+            </div>
+          ))}
+        </Marquee>
+      </motion.div>
     </section>
   );
 }

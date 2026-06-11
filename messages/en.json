@@ -34,5 +34,9 @@
   },
   "showcase": {
     "heading": "Content Showcase"
+  },
+  "trustedBy": {
+    "heading": "Trusted by",
+    "alt": "Logos of companies and organizations that trust Ecsight"
   }
 }

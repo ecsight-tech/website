@@ -6,6 +6,7 @@ import { Work } from "@/components/sections/work";
 import { ContentShowcase } from "@/components/sections/content-showcase";
 import { Partners } from "@/components/sections/partners";
 import { Testimonials } from "@/components/sections/testimonials";
+import { TrustedBy } from "@/components/sections/trusted-by";
 import { CTA } from "@/components/sections/cta";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
@@ -62,6 +63,7 @@ export default async function Home({
             projects.data as React.ComponentProps<typeof Work>["projects"]
           }
         />
+        <TrustedBy />
         <ContentShowcase
           items={
             showcase.data as React.ComponentProps<

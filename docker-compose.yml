@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        # Read from host env or a .env file beside this compose file.
+        PUBLIC_SANITY_PROJECT_ID: ${PUBLIC_SANITY_PROJECT_ID}
+        PUBLIC_SANITY_DATASET: ${PUBLIC_SANITY_DATASET:-production}
+        PUBLIC_SANITY_API_VERSION: ${PUBLIC_SANITY_API_VERSION:-2024-06-10}
+    image: ecsight-group:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped

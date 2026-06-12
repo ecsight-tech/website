@@ -23,10 +23,11 @@ export const featuredProjectsQuery = groq`
   *[_type == "project" && featured == true] | order(publishedAt desc) {
     _id,
     "slug": slug.current,
-    client, category, coverImage, year,
+    client, category, coverImage, gallery, services, year, url,
     "title": coalesce(title.en, title),
     "subtitle": coalesce(subtitle[$locale], subtitle.en, subtitle),
-    "excerpt": coalesce(excerpt[$locale], excerpt.en, excerpt)
+    "excerpt": coalesce(excerpt[$locale], excerpt.en, excerpt),
+    "body": coalesce(body[$locale], body.en, body)
   }
 `;
 

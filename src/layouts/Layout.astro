@@ -11,8 +11,8 @@ interface Props {
 
 const {
   locale,
-  title = "ecsight — Digital Agency",
-  description = "ecsight is a digital agency building bold brands, products, and experiences for ambitious teams.",
+  title = "Ecsight Group",
+  description = "Ecsight Group is a digital agency building bold brands, products, and experiences for ambitious teams.",
 } = Astro.props;
 ---
 
@@ -36,7 +36,14 @@ const {
     <script>
       import Lenis from "lenis";
 
-      new Lenis({ lerp: 0.1, anchors: true, autoRaf: true });
+      const lenis = new Lenis({ lerp: 0.1, anchors: true, autoRaf: true });
+
+      // Lenis caches the scroll limit at init; lazy images and the marquee
+      // grow the page afterwards, leaving the bottom unreachable. Recalc on
+      // any content size change and once everything has loaded.
+      const resize = () => lenis.resize();
+      new ResizeObserver(resize).observe(document.body);
+      window.addEventListener("load", resize);
     </script>
   </body>
 </html>

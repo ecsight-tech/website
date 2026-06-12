@@ -1,24 +1,20 @@
+import { useState } from "react";
 import { FiImage } from "react-icons/fi";
 
 import { FadeIn } from "@/components/motion-primitives";
 import { urlFor } from "@/sanity/lib/image";
 import type { Messages } from "@/i18n/ui";
-
-type Project = {
-  _id: string;
-  title: string;
-  subtitle?: string;
-  excerpt?: string;
-  coverImage?: Parameters<typeof urlFor>[0];
-};
+import { ProjectDialog, type ProjectDetail } from "./project-dialog";
 
 export function Work({
   projects,
   t,
 }: {
-  projects?: Project[];
+  projects?: ProjectDetail[];
   t: Messages["work"];
 }) {
+  const [selected, setSelected] = useState<ProjectDetail | null>(null);
+
   if (!projects || projects.length === 0) return null;
 
   return (
@@ -37,21 +33,26 @@ export function Work({
         <div className="flex flex-col gap-16">
           {projects.map((p) => (
             <FadeIn key={p._id}>
-              <article className="grid items-center gap-12 sm:grid-cols-[minmax(0,460px)_1fr]">
+              <button
+                type="button"
+                onClick={() => setSelected(p)}
+                aria-label={p.title}
+                className="group grid w-full cursor-pointer items-center gap-12 text-left sm:grid-cols-[minmax(0,460px)_1fr]"
+              >
                 <div className="relative flex aspect-3/4 items-center justify-center overflow-hidden rounded-4xl bg-white/[0.07]">
                   {p.coverImage ? (
                     <img
                       src={urlFor(p.coverImage).width(640).height(854).url()}
                       alt={p.title}
                       loading="lazy"
-                      className="absolute inset-0 size-full object-cover"
+                      className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <FiImage className="size-24 text-white opacity-10" />
                   )}
                 </div>
                 <div>
-                  <h3 className="font-heading text-4xl font-medium md:text-5xl">
+                  <h3 className="font-heading text-4xl font-medium transition-colors group-hover:text-primary md:text-5xl">
                     {p.title}
                   </h3>
                   {p.subtitle ? (
@@ -65,11 +66,13 @@ export function Work({
                     </p>
                   ) : null}
                 </div>
-              </article>
+              </button>
             </FadeIn>
           ))}
         </div>
       </div>
+
+      <ProjectDialog project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

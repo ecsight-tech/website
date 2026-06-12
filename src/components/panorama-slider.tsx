@@ -1,12 +1,20 @@
 import { useEffect, useRef } from "react";
-import { FiImage } from "react-icons/fi";
 import Swiper from "swiper";
 import { Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType, SwiperOptions } from "swiper/types";
 
 import "swiper/css";
 
-const CARD_COUNT = 12;
+const IMAGES = [
+  "/gallery/gallery-1.jpg",
+  "/gallery/gallery-2.jpg",
+  "/gallery/gallery-3.jpg",
+  "/gallery/gallery-4.jpg",
+  "/gallery/gallery-5.jpg",
+  "/gallery/gallery-6.png",
+  "/gallery/gallery-7.jpg",
+  "/gallery/gallery-8.jpg",
+];
 
 type PanoramaSlide = HTMLElement & { progress: number };
 
@@ -113,13 +121,18 @@ export function PanoramaSlider() {
         className="swiper h-full! overflow-visible! perspective-distant"
       >
         <div className="swiper-wrapper ease-linear! items-center transform-3d">
-          {Array.from({ length: CARD_COUNT }).map((_, i) => (
+          {IMAGES.map((src, i) => (
             <div
-              key={i}
+              key={src}
               className="swiper-slide ease-linear! will-change-transform"
             >
-              <div className="mx-auto flex h-[400px] w-full max-w-[480px] items-center justify-center rounded-4xl bg-[#d7d7d7] md:h-[480px]">
-                <FiImage className="size-20 text-black/25" />
+              <div className="mx-auto h-[400px] w-full max-w-[480px] overflow-hidden rounded-4xl bg-[#d7d7d7] md:h-[480px]">
+                <img
+                  src={src}
+                  alt={`Ecsight gallery ${i + 1}`}
+                  loading="lazy"
+                  className="size-full object-cover"
+                />
               </div>
             </div>
           ))}

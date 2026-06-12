@@ -1,0 +1,69 @@
+---
+import { sanityClient } from "sanity:client";
+
+import Layout from "@/layouts/Layout.astro";
+import { getMessages, type Locale } from "@/i18n/ui";
+import {
+  servicesQuery,
+  featuredProjectsQuery,
+  partnersQuery,
+  showcaseQuery,
+  siteSettingsQuery,
+} from "@/sanity/lib/queries";
+import { SiteHeader, type HeaderSettings } from "@/components/site/site-header";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import { Hero } from "@/components/sections/hero";
+import { Services } from "@/components/sections/services";
+import { Partners } from "@/components/sections/partners";
+import { Work } from "@/components/sections/work";
+import { TrustedBy } from "@/components/sections/trusted-by";
+import { ContentShowcase } from "@/components/sections/content-showcase";
+import { CTA } from "@/components/sections/cta";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getMessages(locale);
+const params = { locale };
+
+type SiteSettings = (HeaderSettings & { email?: string }) | null;
+
+const [services, projects, partners, showcase, settings] = await Promise.all([
+  sanityClient.fetch(servicesQuery, params),
+  sanityClient.fetch(featuredProjectsQuery, params),
+  sanityClient.fetch(partnersQuery, params),
+  sanityClient.fetch(showcaseQuery, params),
+  sanityClient.fetch<SiteSettings>(siteSettingsQuery, params),
+]);
+
+const email = settings?.email;
+---
+
+<Layout locale={locale}>
+  <SiteHeader
+    client:load
+    settings={settings ?? undefined}
+    locale={locale}
+    t={t.nav}
+  />
+  <main>
+    <Hero client:load t={t.hero} />
+    <Services
+      client:visible
+      services={services}
+      heading={t.services.heading}
+    />
+    <Partners client:load partners={partners} heading={t.partners.heading} />
+    <Work client:visible projects={projects} t={t.work} />
+    <TrustedBy client:visible t={t.trustedBy} />
+    <ContentShowcase
+      client:visible
+      items={showcase}
+      heading={t.showcase.heading}
+    />
+    <CTA client:visible email={email} t={t.cta} />
+  </main>
+  <SiteFooter email={email} rights={t.footer.rights} />
+</Layout>

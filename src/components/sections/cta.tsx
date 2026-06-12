@@ -1,26 +1,25 @@
-import { useTranslations } from "next-intl";
 import { FiImage } from "react-icons/fi";
 
 import { FadeIn } from "@/components/motion-primitives";
+import type { Messages } from "@/i18n/ui";
 
-export function CTA({ email }: { email?: string }) {
-  const t = useTranslations("cta");
+export function CTA({ email, t }: { email?: string; t: Messages["cta"] }) {
   return (
     <section id="contact" className="px-6 py-28">
       <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-2">
         <FadeIn className="h-full">
           <div className="flex h-full min-h-[480px] flex-col items-center justify-center rounded-4xl bg-primary px-10 py-16 text-center md:min-h-[580px]">
             <h2 className="max-w-sm text-balance font-heading text-5xl font-medium text-primary-foreground md:text-6xl">
-              {t("heading")}
+              {t.heading}
             </h2>
             <p className="mt-8 whitespace-pre-line text-base text-primary-foreground/85 md:text-lg">
-              {t("subtitle")}
+              {t.subtitle}
             </p>
             <a
               href={email ? `mailto:${email}` : "#contact"}
               className="mt-10 rounded-full bg-white px-7 py-3.5 text-base font-medium text-primary shadow-lg transition-transform duration-200 hover:scale-[1.03]"
             >
-              {t("button")}
+              {t.button}
             </a>
           </div>
         </FadeIn>

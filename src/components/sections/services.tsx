@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { useTranslations } from "next-intl";
 import { FiImage } from "react-icons/fi";
 
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion-primitives";
@@ -12,8 +10,13 @@ type Service = {
   image?: (Parameters<typeof urlFor>[0] & { alt?: string }) | null;
 };
 
-export function Services({ services }: { services?: Service[] }) {
-  const t = useTranslations("services");
+export function Services({
+  services,
+  heading,
+}: {
+  services?: Service[];
+  heading: string;
+}) {
   if (!services || services.length === 0) return null;
 
   return (
@@ -21,7 +24,7 @@ export function Services({ services }: { services?: Service[] }) {
       <div className="mx-auto max-w-7xl">
         <FadeIn>
           <h2 className="text-center text-4xl tracking-tight md:text-6xl">
-            {t("heading")}
+            {heading}
           </h2>
         </FadeIn>
 
@@ -32,11 +35,11 @@ export function Services({ services }: { services?: Service[] }) {
               className="group relative flex aspect-3/4 flex-col overflow-hidden rounded-4xl bg-linear-to-b from-white/[0.04] from-35% to-[#16246e] transition-transform duration-300 hover:-translate-y-1.5"
             >
               {s.image ? (
-                <Image
+                <img
                   src={urlFor(s.image).width(900).height(1200).url()}
                   alt={s.image.alt ?? s.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
                 <div className="flex flex-1 items-center justify-center">

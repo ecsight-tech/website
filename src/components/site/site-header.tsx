@@ -1,7 +1,4 @@
-"use client";
-
 import { motion } from "motion/react";
-import { useLocale, useTranslations } from "next-intl";
 import { FiMail, FiPhone } from "react-icons/fi";
 import {
   FaFacebookF,
@@ -13,8 +10,7 @@ import {
 } from "react-icons/fa6";
 import type { IconType } from "react-icons";
 
-import { Link, usePathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { locales, localeHref, type Locale, type Messages } from "@/i18n/ui";
 import { LogoInline } from "./logo";
 
 const socialIcons: Record<string, IconType> = {
@@ -33,15 +29,19 @@ export type HeaderSettings = {
   socials?: { _key: string; platform?: string; url?: string }[];
 };
 
-export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
-  const t = useTranslations("nav");
-  const locale = useLocale();
-  const pathname = usePathname();
-
+export function SiteHeader({
+  settings,
+  locale,
+  t,
+}: {
+  settings?: HeaderSettings;
+  locale: Locale;
+  t: Messages["nav"];
+}) {
   const nav = [
-    { href: "#about", label: t("about") },
-    { href: "#services", label: t("services") },
-    { href: "#content", label: t("content") },
+    { href: "#about", label: t.about },
+    { href: "#services", label: t.services },
+    { href: "#content", label: t.content },
   ];
 
   return (
@@ -96,9 +96,9 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
 
       <div className="border-b border-white/10 bg-background/80 backdrop-blur-md">
         <div className="mx-auto h-16 max-w-7xl items-center justify-between px-6 grid grid-cols-3">
-          <Link href="/" className="flex items-center">
+          <a href={localeHref(locale)} className="flex items-center">
             <LogoInline className="h-7" />
-          </Link>
+          </a>
           <nav className="hidden items-center gap-10 md:flex justify-center">
             {nav.map((n) => (
               <a
@@ -112,11 +112,10 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
           </nav>
           <div className="flex items-center gap-4 justify-end">
             <div className="flex items-center gap-1 text-base uppercase">
-              {routing.locales.map((l) => (
-                <Link
+              {locales.map((l) => (
+                <a
                   key={l}
-                  href={pathname}
-                  locale={l}
+                  href={localeHref(l)}
                   className={
                     l === locale
                       ? "rounded-full bg-white/10 px-2.5 py-1 font-medium text-foreground transition-colors duration-200 hover:bg-white/20"
@@ -124,14 +123,14 @@ export function SiteHeader({ settings }: { settings?: HeaderSettings }) {
                   }
                 >
                   {l}
-                </Link>
+                </a>
               ))}
             </div>
             <a
               href="#contact"
               className="hidden rounded-full bg-primary px-5 py-2.5 text-base font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:block"
             >
-              {t("cta")}
+              {t.cta}
             </a>
           </div>
         </div>

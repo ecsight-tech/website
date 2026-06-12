@@ -1,9 +1,11 @@
-"use client";
-
-import Image from "next/image";
-import Marquee from "react-fast-marquee";
-import { useTranslations } from "next-intl";
+import MarqueeModule from "react-fast-marquee";
 import { FiImage } from "react-icons/fi";
+
+// react-fast-marquee ships CJS only; during Node SSR the default import can
+// surface the module namespace object instead of the component
+const Marquee =
+  (MarqueeModule as unknown as { default?: typeof MarqueeModule }).default ??
+  MarqueeModule;
 
 import { FadeIn } from "@/components/motion-primitives";
 import { urlFor } from "@/sanity/lib/image";
@@ -33,11 +35,11 @@ function ShowcaseCard({ item }: { item: ShowcaseItem }) {
           className="absolute inset-0 size-full object-cover"
         />
       ) : item.poster ? (
-        <Image
+        <img
           src={urlFor(item.poster).width(800).height(1040).url()}
           alt={item.title}
-          fill
-          className="object-cover"
+          loading="lazy"
+          className="absolute inset-0 size-full object-cover"
         />
       ) : (
         <FiImage className="size-20 text-white/15" />
@@ -54,15 +56,20 @@ function ShowcaseCard({ item }: { item: ShowcaseItem }) {
   );
 }
 
-export function ContentShowcase({ items }: { items?: ShowcaseItem[] }) {
-  const t = useTranslations("showcase");
+export function ContentShowcase({
+  items,
+  heading,
+}: {
+  items?: ShowcaseItem[];
+  heading: string;
+}) {
   if (!items || items.length === 0) return null;
 
   return (
     <section id="content" className="overflow-hidden py-28">
       <FadeIn>
         <h2 className="px-6 text-center text-4xl tracking-tight md:text-6xl">
-          {t("heading")}
+          {heading}
         </h2>
       </FadeIn>
 

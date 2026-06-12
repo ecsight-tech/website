@@ -1,9 +1,5 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useTranslations } from "next-intl";
 
 import { urlFor } from "@/sanity/lib/image";
 
@@ -15,8 +11,13 @@ type Partner = {
   logo?: Parameters<typeof urlFor>[0];
 };
 
-export function Partners({ partners }: { partners?: Partner[] }) {
-  const t = useTranslations("partners");
+export function Partners({
+  partners,
+  heading,
+}: {
+  partners?: Partner[];
+  heading: string;
+}) {
   const targetRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxShift, setMaxShift] = useState(0);
@@ -46,7 +47,7 @@ export function Partners({ partners }: { partners?: Partner[] }) {
     <section ref={targetRef} className="relative h-[300vh]">
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
         <h2 className="mx-auto w-full max-w-7xl px-6 text-4xl tracking-tight md:text-6xl">
-          {t("heading")}
+          {heading}
         </h2>
         <motion.div
           ref={trackRef}
@@ -74,21 +75,23 @@ export function Partners({ partners }: { partners?: Partner[] }) {
               <div className="relative">
                 {p.logo ? (
                   <div className="flex items-center justify-center size-20">
-                    <Image
+                    <img
                       src={urlFor(p.logo).width(112).height(112).url()}
                       alt={p.name}
                       width={56}
                       height={56}
+                      loading="lazy"
                       className="w-full object-cover"
                     />
                   </div>
                 ) : (
                   <div className="flex items-center justify-center size-20">
-                    <Image
-                      src={"/dataechooo_logo.png"}
+                    <img
+                      src="/dataechooo_logo.png"
                       alt={p.name}
                       width={56}
                       height={56}
+                      loading="lazy"
                       className="size-20 rounded-full object-cover"
                     />
                   </div>

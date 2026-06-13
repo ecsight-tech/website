@@ -27,7 +27,11 @@
     "button": "Start with a consultation"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "contact": "Contact",
+    "follow": "Follow",
+    "address": "Address",
+    "journey": "Follow our journey"
   },
   "partners": {
     "heading": "Partners"

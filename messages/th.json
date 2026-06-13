@@ -27,7 +27,11 @@
     "button": "เริ่มต้นรับคำแนะนำ"
   },
   "footer": {
-    "rights": "สงวนลิขสิทธิ์"
+    "rights": "สงวนลิขสิทธิ์",
+    "contact": "ติดต่อ",
+    "follow": "ติดตาม",
+    "address": "ที่อยู่",
+    "journey": "ติดตามเส้นทางของเรา"
   },
   "partners": {
     "heading": "Partners"

@@ -28,7 +28,15 @@ const { locale } = Astro.props;
 const t = getMessages(locale);
 const params = { locale };
 
-type SiteSettings = (HeaderSettings & { email?: string }) | null;
+type SiteSettings =
+  | (HeaderSettings & {
+      email?: string;
+      phone?: string;
+      address?: string;
+      description?: string;
+      socials?: { platform?: string; url?: string }[];
+    })
+  | null;
 
 const [services, projects, partners, showcase, settings] = await Promise.all([
   sanityClient.fetch(servicesQuery, params),
@@ -65,5 +73,12 @@ const email = settings?.email;
     />
     <CTA client:visible email={email} t={t.cta} />
   </main>
-  <SiteFooter email={email} rights={t.footer.rights} />
+  <SiteFooter
+    email={email}
+    phone={settings?.phone}
+    address={settings?.address}
+    socials={settings?.socials}
+    description={settings?.description}
+    t={t.footer}
+  />
 </Layout>

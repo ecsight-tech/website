@@ -7,9 +7,16 @@ type Variant = "primary" | "secondary";
 type Size = "sm" | "md" | "lg";
 
 // Shared look, lifted from the hero buttons: pill shape, raised shadow with a
-// 1px top highlight, lift-on-hover.
+// 1px top highlight.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium text-primary-foreground shadow-lg inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] transition-all duration-300 hover:scale-105 hover:opacity-90 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100";
+  "inline-flex items-center justify-center gap-2 rounded-full font-medium text-primary-foreground shadow-lg inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60";
+
+// CSS-driven hover. Applied only to the static (non-animated) buttons — kept
+// off the Motion path so the browser doesn't re-ease the opacity/transform
+// that Motion is already keyframing on entrance (that fight caused the
+// double-blink). Motion buttons get whileHover instead.
+const cssInteractive =
+  "transition-transform duration-300 hover:scale-105 hover:opacity-90";
 
 const variants: Record<Variant, string> = {
   primary: "bg-linear-to-br from-10% from-[#195EDD] to-primary shadow-primary/30",
@@ -36,30 +43,56 @@ export type ButtonProps =
         href?: undefined;
       });
 
-export const Button = forwardRef<
+function makeButton(withCssHover: boolean) {
+  return forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonProps>(
+    function Button(
+      { variant = "primary", size = "md", className, ...props },
+      ref,
+    ) {
+      const cls = cn(
+        base,
+        variants[variant],
+        sizes[size],
+        withCssHover && cssInteractive,
+        className,
+      );
+
+      if (props.href !== undefined) {
+        return (
+          <a
+            ref={ref as React.Ref<HTMLAnchorElement>}
+            className={cls}
+            {...(props as React.ComponentPropsWithoutRef<"a">)}
+          />
+        );
+      }
+
+      return (
+        <button
+          ref={ref as React.Ref<HTMLButtonElement>}
+          className={cls}
+          {...(props as React.ComponentPropsWithoutRef<"button">)}
+        />
+      );
+    },
+  );
+}
+
+export const Button = makeButton(true);
+
+// Motion owns hover (and entrance) so nothing CSS-transitions the same props.
+const MotionBase = motion.create(makeButton(false));
+
+export const MotionButton = forwardRef<
   HTMLAnchorElement | HTMLButtonElement,
-  ButtonProps
->(function Button({ variant = "primary", size = "md", className, ...props }, ref) {
-  const cls = cn(base, variants[variant], sizes[size], className);
-
-  if (props.href !== undefined) {
-    return (
-      <a
-        ref={ref as React.Ref<HTMLAnchorElement>}
-        className={cls}
-        {...(props as React.ComponentPropsWithoutRef<"a">)}
-      />
-    );
-  }
-
+  React.ComponentProps<typeof MotionBase>
+>(function MotionButton(props, ref) {
   return (
-    <button
-      ref={ref as React.Ref<HTMLButtonElement>}
-      className={cls}
-      {...(props as React.ComponentPropsWithoutRef<"button">)}
+    <MotionBase
+      ref={ref}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.97 }}
+      {...props}
     />
   );
 });
-
-// For sites that animate the button on entrance (hero).
-export const MotionButton = motion.create(Button);

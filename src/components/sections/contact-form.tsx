@@ -57,7 +57,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
 
   if (status === "sent") {
     return (
-      <FadeIn className="flex flex-col items-center gap-4 rounded-[1.9rem] bg-background px-8 py-20 text-center">
+      <FadeIn className="flex flex-col items-center gap-4 rounded-[3rem] bg-background px-8 py-20 text-center">
         <span className="flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
           <FiCheck className="size-7" />
         </span>
@@ -70,7 +70,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="flex flex-col gap-5 rounded-[1.9rem] bg-background p-6 sm:p-10"
+      className="flex flex-col gap-5 rounded-[3rem] bg-background p-6 sm:p-10"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField

@@ -76,10 +76,10 @@ export function Hero({ t }: { t: Messages["hero"] }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
-            href="#contact"
+            href="#work"
             className="rounded-full bg-white/10 px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
           >
-            {t.cta}
+            {t.secondaryCta}
           </motion.a>
         </div>
       </div>

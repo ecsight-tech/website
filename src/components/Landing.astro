@@ -58,19 +58,16 @@ const email = settings?.email;
   />
   <main>
     <Hero client:load t={t.hero} />
-    <Services
-      client:visible
-      services={services}
-      heading={t.services.heading}
-    />
+    <TrustedBy client:visible t={t.trustedBy} />
+
+    <Services client:visible services={services} heading={t.services.heading} />
     <Partners client:load partners={partners} heading={t.partners.heading} />
     <Work client:visible projects={projects} t={t.work} />
-    <TrustedBy client:visible t={t.trustedBy} />
-    <ContentShowcase
+    <!-- <ContentShowcase
       client:visible
       items={showcase}
       heading={t.showcase.heading}
-    />
+    /> -->
     <CTA client:visible email={email} t={t.cta} />
   </main>
   <SiteFooter

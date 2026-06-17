@@ -8,7 +8,7 @@ export function CTA({ email, t }: { email?: string; t: Messages["cta"] }) {
     <section id="contact" className="px-6 py-28">
       <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-2">
         <FadeIn className="h-full">
-          <div className="flex h-full min-h-[480px] flex-col items-center justify-center rounded-4xl bg-primary px-10 py-16 text-center md:min-h-[580px]">
+          <div className="flex h-full flex-col items-center aspect-4/5 justify-center rounded-4xl bg-primary px-10 text-center">
             <h2 className="max-w-sm text-balance font-heading text-5xl font-medium text-primary-foreground md:text-6xl">
               {t.heading}
             </h2>

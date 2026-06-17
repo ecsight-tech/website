@@ -49,7 +49,7 @@ export function Services({
               {s.image ? (
                 <div
                   aria-hidden
-                  className="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent"
+                  className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-transparent"
                 />
               ) : null}
               <h3 className="relative mt-auto pb-12 text-center font-heading text-3xl md:text-[2.5rem]">

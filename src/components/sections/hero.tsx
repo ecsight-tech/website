@@ -62,15 +62,26 @@ export function Hero({ t }: { t: Messages["hero"] }) {
           {t.subtitle}
         </motion.p>
 
-        <motion.a
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
-          href="#contact"
-          className="mt-12 rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
-        >
-          {t.cta}
-        </motion.a>
+        <div className="mt-12 flex gap-4">
+          <motion.a
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
+            href="#contact"
+            className="rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
+          >
+            {t.cta}
+          </motion.a>
+          <motion.a
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
+            href="#contact"
+            className="rounded-full bg-white/10 px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
+          >
+            {t.cta}
+          </motion.a>
+        </div>
       </div>
 
       <motion.div

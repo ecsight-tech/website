@@ -49,5 +49,30 @@
   "trustedBy": {
     "heading": "Trusted by",
     "alt": "Logos of companies and organizations that trust Ecsight"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "heading": "Let's Work Together",
+    "subtitle": "Tell us about your project and we'll get back to you within 1 business day.",
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "message": "Message",
+      "firstNamePlaceholder": "Your first name",
+      "lastNamePlaceholder": "Your last name",
+      "emailPlaceholder": "you@company.com",
+      "phonePlaceholder": "Your phone number",
+      "companyPlaceholder": "Your company",
+      "messagePlaceholder": "How can we help?",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "success": "Thanks — we'll be in touch shortly.",
+      "error": "Something went wrong. Please try again.",
+      "required": "This field is required",
+      "invalidEmail": "Enter a valid email address"
+    }
   }
 }

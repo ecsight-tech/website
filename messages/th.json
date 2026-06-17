@@ -49,5 +49,30 @@
   "trustedBy": {
     "heading": "Trusted by",
     "alt": "โลโก้บริษัทและองค์กรที่ไว้วางใจ Ecsight"
+  },
+  "contact": {
+    "eyebrow": "ติดต่อ",
+    "heading": "Let's Work Together",
+    "subtitle": "เล่าให้เราฟังเกี่ยวกับโปรเจกต์ของคุณ แล้วเราจะติดต่อกลับภายใน 1 วันทำการ",
+    "form": {
+      "firstName": "ชื่อ",
+      "lastName": "นามสกุล",
+      "email": "อีเมล",
+      "phone": "เบอร์โทร",
+      "company": "บริษัท",
+      "message": "ข้อความ",
+      "firstNamePlaceholder": "ชื่อของคุณ",
+      "lastNamePlaceholder": "นามสกุลของคุณ",
+      "emailPlaceholder": "you@company.com",
+      "phonePlaceholder": "เบอร์โทรของคุณ",
+      "companyPlaceholder": "บริษัทของคุณ",
+      "messagePlaceholder": "เราช่วยอะไรคุณได้บ้าง?",
+      "submit": "ส่งข้อความ",
+      "sending": "กำลังส่ง…",
+      "success": "ขอบคุณ — เราจะติดต่อกลับโดยเร็ว",
+      "error": "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+      "required": "กรุณากรอกข้อมูลนี้",
+      "invalidEmail": "กรุณากรอกอีเมลที่ถูกต้อง"
+    }
   }
 }

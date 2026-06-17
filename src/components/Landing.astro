@@ -22,7 +22,7 @@ import { Partners } from "@/components/sections/partners";
 import { Work } from "@/components/sections/work";
 import { TrustedBy } from "@/components/sections/trusted-by";
 import { ContentShowcase } from "@/components/sections/content-showcase";
-import { CTA } from "@/components/sections/cta";
+import Contact from "@/components/sections/contact.astro";
 
 interface Props {
   locale: Locale;
@@ -81,7 +81,13 @@ const email = settings?.email;
       items={showcase}
       heading={t.showcase.heading}
     /> -->
-    <CTA client:visible email={email} t={t.cta} />
+    <Contact
+      t={t}
+      email={email}
+      phone={settings?.phone}
+      address={settings?.address}
+      socials={settings?.socials}
+    />
   </main>
   <SiteFooter
     email={email}

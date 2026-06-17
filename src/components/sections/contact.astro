@@ -1,0 +1,144 @@
+---
+import type { Messages } from "@/i18n/ui";
+import { ContactForm } from "@/components/sections/contact-form";
+
+interface Social {
+  platform?: string;
+  url?: string;
+}
+
+interface Props {
+  t: Messages;
+  email?: string;
+  phone?: string;
+  address?: string;
+  socials?: Social[];
+}
+
+const { t, email, phone, address } = Astro.props;
+---
+
+<section id="contact" class="px-6 py-20 sm:py-28">
+  <div
+    class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2 lg:gap-20"
+  >
+    {/* left: heading + contact info */}
+    <div>
+      <h2
+        class="text-balance font-heading text-5xl tracking-tight text-foreground md:text-6xl"
+      >
+        {t.contact.heading}
+      </h2>
+      <p class="mt-5 max-w-md text-base text-foreground/55 md:text-lg">
+        {t.contact.subtitle}
+      </p>
+
+      <ul class="mt-20">
+        {
+          email ? (
+            <li>
+              <a
+                href={`mailto:${email}`}
+                class="group flex items-center gap-4 py-5 transition-colors"
+              >
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-foreground/70 transition-colors group-hover:text-foreground">
+                  <svg
+                    class="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-10 6L2 7" />
+                  </svg>
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-sm uppercase tracking-wide text-foreground/40">
+                    {t.contact.form.email}
+                  </span>
+                  <span class="block text-foreground/80 transition-colors group-hover:text-foreground">
+                    {email}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ) : null
+        }
+
+        {
+          phone ? (
+            <li>
+              <a
+                href={`tel:${phone}`}
+                class="group flex items-center gap-4 py-5 transition-colors"
+              >
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-foreground/70 transition-colors group-hover:text-foreground">
+                  <svg
+                    class="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-sm uppercase tracking-wide text-foreground/40">
+                    {t.contact.form.phone}
+                  </span>
+                  <span class="block text-foreground/80 transition-colors group-hover:text-foreground">
+                    {phone}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ) : null
+        }
+
+        {
+          address ? (
+            <li>
+              <div class="flex items-center gap-4 py-5">
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-foreground/70">
+                  <svg
+                    class="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-sm uppercase tracking-wide text-foreground/40">
+                    {t.footer.address}
+                  </span>
+                  <span class="block whitespace-pre-line text-foreground/80">
+                    {address}
+                  </span>
+                </span>
+              </div>
+            </li>
+          ) : null
+        }
+      </ul>
+    </div>
+
+    {/* right: form in gradient-bordered card */}
+    <div
+      class="rounded-[2rem] bg-linear-to-br from-primary via-cyan-500 to-indigo-500 p-1 shadow-2xl"
+    >
+      <ContactForm client:visible t={t.contact} />
+    </div>
+  </div>
+</section>

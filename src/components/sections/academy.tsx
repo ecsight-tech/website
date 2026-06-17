@@ -7,6 +7,8 @@ type AcademyItem = {
   _id: string;
   title: string;
   summary?: string;
+  category?: string;
+  targetAudience?: string[];
   image?: (Parameters<typeof urlFor>[0] & { alt?: string }) | null;
 };
 
@@ -49,13 +51,30 @@ export function Academy({
                 )}
               </div>
               <div className="flex flex-1 flex-col gap-3 p-7">
+                {item.category ? (
+                  <span className="w-fit text-sm font-medium uppercase tracking-wide text-white/70">
+                    {item.category}
+                  </span>
+                ) : null}
                 <h3 className="font-heading text-2xl md:text-3xl">
                   {item.title}
                 </h3>
                 {item.summary ? (
-                  <p className="text-sm leading-relaxed text-white/60">
+                  <p className="leading-relaxed text-white/60 line-clamp-2">
                     {item.summary}
                   </p>
+                ) : null}
+                {item.targetAudience && item.targetAudience.length > 0 ? (
+                  <ul className="mt-auto flex flex-wrap gap-2 pt-2">
+                    {item.targetAudience.map((audience) => (
+                      <li
+                        key={audience}
+                        className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/70"
+                      >
+                        {audience}
+                      </li>
+                    ))}
+                  </ul>
                 ) : null}
               </div>
             </StaggerItem>

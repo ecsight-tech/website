@@ -44,14 +44,14 @@ type SiteSettings =
 
 const [services, mediaEvents, academy, projects, partners, showcase, settings] =
   await Promise.all([
-  sanityClient.fetch(servicesQuery, params),
-  sanityClient.fetch(mediaEventsQuery, params),
-  sanityClient.fetch(academyQuery, params),
-  sanityClient.fetch(featuredProjectsQuery, params),
-  sanityClient.fetch(partnersQuery, params),
-  sanityClient.fetch(showcaseQuery, params),
-  sanityClient.fetch<SiteSettings>(siteSettingsQuery, params),
-]);
+    sanityClient.fetch(servicesQuery, params),
+    sanityClient.fetch(mediaEventsQuery, params),
+    sanityClient.fetch(academyQuery, params),
+    sanityClient.fetch(featuredProjectsQuery, params),
+    sanityClient.fetch(partnersQuery, params),
+    sanityClient.fetch(showcaseQuery, params),
+    sanityClient.fetch<SiteSettings>(siteSettingsQuery, params),
+  ]);
 
 const email = settings?.email;
 ---
@@ -68,13 +68,13 @@ const email = settings?.email;
     <TrustedBy client:visible t={t.trustedBy} />
 
     <Services client:visible services={services} heading={t.services.heading} />
-    <MediaEvent
+    <!-- <MediaEvent
       client:visible
       items={mediaEvents}
       heading={t.mediaEvent.heading}
-    />
-    <Academy client:visible items={academy} heading={t.academy.heading} />
+    /> -->
     <Partners client:load partners={partners} heading={t.partners.heading} />
+    <Academy client:visible items={academy} heading={t.academy.heading} />
     <Work client:visible projects={projects} t={t.work} />
     <!-- <ContentShowcase
       client:visible

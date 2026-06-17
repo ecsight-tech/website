@@ -34,8 +34,10 @@ export const academyQuery = groq`
     _id,
     "slug": slug.current,
     image,
+    category,
     "title": coalesce(title.en, title),
-    "summary": coalesce(summary[$locale], summary.en, summary)
+    "summary": coalesce(summary[$locale], summary.en, summary),
+    "targetAudience": targetAudience[]{ "value": coalesce(@[$locale], @.en, @) }.value
   }
 `;
 

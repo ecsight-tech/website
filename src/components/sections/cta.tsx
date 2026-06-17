@@ -2,6 +2,7 @@ import { FiArrowRight } from "react-icons/fi";
 
 import { FadeIn } from "@/components/motion-primitives";
 import type { Messages } from "@/i18n/ui";
+import { LogoMark } from "@/components/site/logo";
 
 // Same gallery source as the hero's panorama slider.
 const IMAGES = [
@@ -79,6 +80,7 @@ export function CTA({ email, t }: { email?: string; t: Messages["cta"] }) {
               {t.eyebrow}
             </span>
           ) : null} */}
+          <LogoMark className="size-20 mb-8" />
 
           <h2 className="max-w-2xl text-balance font-heading text-5xl tracking-tight text-foreground md:text-6xl">
             {t.heading}

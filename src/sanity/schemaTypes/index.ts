@@ -7,6 +7,8 @@ import {
   localeBlockContent,
 } from "./locale";
 import { service } from "./service";
+import { mediaEvent } from "./mediaEvent";
+import { academy } from "./academy";
 import { partner } from "./partner";
 import { showcase } from "./showcase";
 import { project } from "./project";
@@ -21,6 +23,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     localeText,
     localeBlockContent,
     service,
+    mediaEvent,
+    academy,
     project,
     partner,
     showcase,

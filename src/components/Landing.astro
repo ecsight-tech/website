@@ -5,6 +5,8 @@ import Layout from "@/layouts/Layout.astro";
 import { getMessages, type Locale } from "@/i18n/ui";
 import {
   servicesQuery,
+  mediaEventsQuery,
+  academyQuery,
   featuredProjectsQuery,
   partnersQuery,
   showcaseQuery,
@@ -14,6 +16,8 @@ import { SiteHeader, type HeaderSettings } from "@/components/site/site-header";
 import SiteFooter from "@/components/site/SiteFooter.astro";
 import { Hero } from "@/components/sections/hero";
 import { Services } from "@/components/sections/services";
+import { MediaEvent } from "@/components/sections/media-event";
+import { Academy } from "@/components/sections/academy";
 import { Partners } from "@/components/sections/partners";
 import { Work } from "@/components/sections/work";
 import { TrustedBy } from "@/components/sections/trusted-by";
@@ -38,8 +42,11 @@ type SiteSettings =
     })
   | null;
 
-const [services, projects, partners, showcase, settings] = await Promise.all([
+const [services, mediaEvents, academy, projects, partners, showcase, settings] =
+  await Promise.all([
   sanityClient.fetch(servicesQuery, params),
+  sanityClient.fetch(mediaEventsQuery, params),
+  sanityClient.fetch(academyQuery, params),
   sanityClient.fetch(featuredProjectsQuery, params),
   sanityClient.fetch(partnersQuery, params),
   sanityClient.fetch(showcaseQuery, params),
@@ -61,6 +68,12 @@ const email = settings?.email;
     <TrustedBy client:visible t={t.trustedBy} />
 
     <Services client:visible services={services} heading={t.services.heading} />
+    <MediaEvent
+      client:visible
+      items={mediaEvents}
+      heading={t.mediaEvent.heading}
+    />
+    <Academy client:visible items={academy} heading={t.academy.heading} />
     <Partners client:load partners={partners} heading={t.partners.heading} />
     <Work client:visible projects={projects} t={t.work} />
     <!-- <ContentShowcase

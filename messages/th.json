@@ -15,6 +15,12 @@
   "services": {
     "heading": "Our Services"
   },
+  "mediaEvent": {
+    "heading": "สื่อและกิจกรรม"
+  },
+  "academy": {
+    "heading": "Academy"
+  },
   "work": {
     "heading": "Our Projects",
     "viewAll": "ดูผลงานทั้งหมด",
@@ -22,6 +28,7 @@
     "viewMoreCaption": "ดูผลงานของพวกเราทั้งหมด"
   },
   "cta": {
+    "eyebrow": "เริ่มต้น",
     "heading": "Let's Work Together",
     "subtitle": "กรอกฟอร์มติดต่อเพื่อรับคำปรึกษาฟรี\nเราจะติดต่อภายใน 1 วันทำการ",
     "button": "เริ่มต้นรับคำแนะนำ"

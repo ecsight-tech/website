@@ -19,6 +19,26 @@ export const servicesQuery = groq`
   }
 `;
 
+export const mediaEventsQuery = groq`
+  *[_type == "mediaEvent"] | order(order asc) {
+    _id,
+    "slug": slug.current,
+    image,
+    "title": coalesce(title.en, title),
+    "summary": coalesce(summary[$locale], summary.en, summary)
+  }
+`;
+
+export const academyQuery = groq`
+  *[_type == "academy"] | order(order asc) {
+    _id,
+    "slug": slug.current,
+    image,
+    "title": coalesce(title.en, title),
+    "summary": coalesce(summary[$locale], summary.en, summary)
+  }
+`;
+
 export const featuredProjectsQuery = groq`
   *[_type == "project" && featured == true] | order(publishedAt desc) {
     _id,

@@ -15,6 +15,12 @@
   "services": {
     "heading": "Our Services"
   },
+  "mediaEvent": {
+    "heading": "Media & Event"
+  },
+  "academy": {
+    "heading": "Academy"
+  },
   "work": {
     "heading": "Our Projects",
     "viewAll": "View all work",
@@ -22,6 +28,7 @@
     "viewMoreCaption": "See everything we've made"
   },
   "cta": {
+    "eyebrow": "Get Started",
     "heading": "Let's Work Together",
     "subtitle": "Fill in the contact form for a free consultation.\nWe'll get back to you within 1 business day.",
     "button": "Get in touch"

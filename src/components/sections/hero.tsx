@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import Aurora from "@/components/Aurora";
 import { PanoramaSlider } from "@/components/panorama-slider";
 import { LogoMark } from "@/components/site/logo";
+import { MotionButton } from "@/components/ui/button";
 import type { Messages } from "@/i18n/ui";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
@@ -63,24 +64,26 @@ export function Hero({ t }: { t: Messages["hero"] }) {
         </motion.p>
 
         <div className="mt-12 flex gap-4">
-          <motion.a
+          <MotionButton
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
             href="#contact"
-            className="rounded-full bg-linear-to-br from-10% from-[#195EDD] to-primary px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg shadow-primary/30 inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
+            variant="primary"
+            size="lg"
           >
             {t.cta}
-          </motion.a>
-          <motion.a
+          </MotionButton>
+          <MotionButton
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.65, ease: easeOut }}
             href="#work"
-            className="rounded-full bg-white/10 px-8 py-4 text-xl tracking-wide font-medium text-primary-foreground shadow-lg inset-shadow-[0_1px_0_rgb(255_255_255/0.25)] hover:scale-105 transition-all duration-300 hover:opacity-90"
+            variant="secondary"
+            size="lg"
           >
             {t.secondaryCta}
-          </motion.a>
+          </MotionButton>
         </div>
       </div>
 

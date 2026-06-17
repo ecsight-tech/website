@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 
 import { FadeIn } from "@/components/motion-primitives";
+import { Button } from "@/components/ui/button";
 import type { Messages } from "@/i18n/ui";
 
 type Field =
@@ -143,13 +144,15 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
         ) : null}
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 inline-flex items-center justify-center gap-2 self-end rounded-full bg-primary px-7 py-3.5 text-base font-medium text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-[1.03] disabled:cursor-not-allowed disabled:opacity-60"
+        variant="primary"
+        size="md"
+        className="mt-2 self-end"
       >
         {status === "sending" ? f.sending : f.submit}
-      </button>
+      </Button>
     </form>
   );
 }

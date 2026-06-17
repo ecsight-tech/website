@@ -1,6 +1,5 @@
-import { FiArrowRight } from "react-icons/fi";
-
 import { FadeIn } from "@/components/motion-primitives";
+import { Button } from "@/components/ui/button";
 import type { Messages } from "@/i18n/ui";
 import { LogoMark } from "@/components/site/logo";
 
@@ -80,7 +79,7 @@ export function CTA({ email, t }: { email?: string; t: Messages["cta"] }) {
               {t.eyebrow}
             </span>
           ) : null} */}
-          <LogoMark className="size-20 mb-8" />
+          {/* <LogoMark className="size-20 mb-8" /> */}
 
           <h2 className="max-w-2xl text-balance font-heading text-5xl tracking-tight text-foreground md:text-6xl">
             {t.heading}
@@ -90,13 +89,14 @@ export function CTA({ email, t }: { email?: string; t: Messages["cta"] }) {
             {t.subtitle}
           </p>
 
-          <a
+          <Button
             href={email ? `mailto:${email}` : "#contact"}
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-medium text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-[1.03]"
+            variant="primary"
+            size="md"
+            className="mt-10"
           >
             {t.button}
-            <FiArrowRight className="size-4" />
-          </a>
+          </Button>
         </FadeIn>
       </div>
     </section>

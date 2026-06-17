@@ -22,6 +22,7 @@ import { Partners } from "@/components/sections/partners";
 import { Work } from "@/components/sections/work";
 import { TrustedBy } from "@/components/sections/trusted-by";
 import { ContentShowcase } from "@/components/sections/content-showcase";
+import { CTA } from "@/components/sections/cta";
 import Contact from "@/components/sections/contact.astro";
 
 interface Props {
@@ -75,12 +76,13 @@ const email = settings?.email;
     /> -->
     <Partners client:load partners={partners} heading={t.partners.heading} />
     <Academy client:visible items={academy} heading={t.academy.heading} />
-    <Work client:visible projects={projects} t={t.work} />
+    <!-- <CTA client:load email={email} t={t.cta} /> -->
     <!-- <ContentShowcase
       client:visible
       items={showcase}
       heading={t.showcase.heading}
     /> -->
+    <Work client:visible projects={projects} t={t.work} />
     <Contact
       t={t}
       email={email}

@@ -5,6 +5,7 @@ import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { FiX, FiArrowUpRight } from "react-icons/fi";
 
 import { urlFor } from "@/sanity/lib/image";
+import { Button } from "@/components/ui/button";
 
 export type ProjectDetail = {
   _id: string;
@@ -151,15 +152,17 @@ export function ProjectDialog({
               ) : null}
 
               {project.url ? (
-                <a
+                <Button
                   href={project.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-9 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  variant="primary"
+                  size="md"
+                  className="mt-9"
                 >
                   Visit project
                   <FiArrowUpRight className="size-4" />
-                </a>
+                </Button>
               ) : null}
             </div>
             </div>

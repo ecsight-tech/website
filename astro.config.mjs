@@ -1,6 +1,7 @@
 // @ts-check
 
 import react from "@astrojs/react";
+import vercel from "@astrojs/vercel";
 import sanity from "@sanity/astro";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
@@ -15,6 +16,8 @@ const {
 
 // https://astro.build/config
 export default defineConfig({
+  // Static by default; API routes opt into SSR via `export const prerender = false`.
+  adapter: vercel(),
   i18n: {
     defaultLocale: "en",
     locales: ["en", "th"],

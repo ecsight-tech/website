@@ -26,7 +26,9 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
     message: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
 
   const set = (field: Field, value: string) => {
     setValues((v) => ({ ...v, [field]: value }));
@@ -50,10 +52,17 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
     e.preventDefault();
     if (status === "sending" || !validate()) return;
     setStatus("sending");
-    // UI-only: no backend wired yet. Simulate a round-trip so the success
-    // state is exercised; replace with a real submit (Formspree/API) later.
-    await new Promise((r) => setTimeout(r, 700));
-    setStatus("sent");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   };
 
   if (status === "sent") {
@@ -143,6 +152,12 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
           <span className="text-sm text-red-400">{errors.message}</span>
         ) : null}
       </div>
+
+      {status === "error" ? (
+        <p className="text-sm text-red-400" role="alert">
+          {f.error}
+        </p>
+      ) : null}
 
       <Button
         type="submit"

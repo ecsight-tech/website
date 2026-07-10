@@ -15,6 +15,7 @@ import { project } from "./project";
 import { teamMember } from "./teamMember";
 import { testimonial } from "./testimonial";
 import { siteSettings } from "./siteSettings";
+import { contactSubmission } from "./contactSubmission";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -31,5 +32,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     teamMember,
     testimonial,
     siteSettings,
+    contactSubmission,
   ],
 };

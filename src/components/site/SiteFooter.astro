@@ -30,7 +30,6 @@ const {
   t,
 } = Astro.props;
 const year = new Date().getFullYear();
-const wordmark = brand.toUpperCase();
 ---
 
 <footer
@@ -40,7 +39,8 @@ const wordmark = brand.toUpperCase();
     class="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 md:grid-cols-2 md:gap-8"
   >
     <div>
-      <h2 class="font-heading text-lg font-semibold tracking-tight">
+      <img src="/logo.svg" alt="Ecsight" class="mb-4 size-10" />
+      <h2 class="font-heading text-xl font-semibold tracking-tight">
         1 Ecsight Group Co., Ltd.
       </h2>
       {
@@ -119,24 +119,6 @@ const wordmark = brand.toUpperCase();
     class="mt-10 p-4 flex w-full select-none items-end gap-[2vw]"
     aria-hidden="true"
   >
-    <svg
-      class="h-[18vw] m-auto text-foreground opacity-10 translate-y-1/4"
-      viewBox="0 0 1000 200"
-      role="presentation"
-    >
-      <text
-        x="0"
-        y="175"
-        textLength="1000"
-        lengthAdjust="spacingAndGlyphs"
-        fill="currentColor"
-        font-size="200"
-        font-weight="400"
-        letter-spacing="-4"
-        style="font-family: var(--font-heading, inherit); text-transform: uppercase;"
-      >
-        {wordmark}
-      </text>
-    </svg>
+    <img src="/ecsight_logo_text.svg" alt="" class="w-full m-auto opacity-5" />
   </div>
 </footer>

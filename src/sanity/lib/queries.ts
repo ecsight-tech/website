@@ -96,6 +96,14 @@ export const partnersQuery = groq`
   }
 `;
 
+export const privacyPolicyQuery = groq`
+  *[_type == "privacyPolicy"][0] {
+    lastUpdated,
+    "title": coalesce(title[$locale], title.en, title),
+    "body": coalesce(body[$locale], body.en, body)
+  }
+`;
+
 export const showcaseQuery = groq`
   *[_type == "showcase"] | order(order asc) {
     _id, title, url, poster,

@@ -10,7 +10,13 @@ import {
 } from "react-icons/fa6";
 import type { IconType } from "react-icons";
 
-import { locales, localeHref, type Locale, type Messages } from "@/i18n/ui";
+import {
+  locales,
+  localeHref,
+  switchLocaleHref,
+  type Locale,
+  type Messages,
+} from "@/i18n/ui";
 import { LogoInline } from "./logo";
 import { Button } from "@/components/ui/button";
 
@@ -34,10 +40,16 @@ export function SiteHeader({
   settings,
   locale,
   t,
+  root = "",
+  pathname,
 }: {
   settings?: HeaderSettings;
   locale: Locale;
   t: Messages["nav"];
+  /** Prefix for section anchors — pass the landing path when rendered on a subpage. */
+  root?: string;
+  /** Current page path — the locale switcher keeps it when swapping locales. */
+  pathname?: string;
 }) {
   const nav = [
     { href: "#about", label: t.about },
@@ -104,7 +116,7 @@ export function SiteHeader({
             {nav.map((n) => (
               <a
                 key={n.href}
-                href={n.href}
+                href={`${root}${n.href}`}
                 className="text-base text-foreground/80 transition-colors hover:text-foreground"
               >
                 {n.label}
@@ -116,7 +128,7 @@ export function SiteHeader({
               {locales.map((l) => (
                 <a
                   key={l}
-                  href={localeHref(l)}
+                  href={pathname ? switchLocaleHref(l, pathname) : localeHref(l)}
                   className={
                     l === locale
                       ? "rounded-full bg-white/10 px-2.5 py-1 font-medium text-foreground transition-colors duration-200 hover:bg-white/20"
@@ -128,7 +140,7 @@ export function SiteHeader({
               ))}
             </div>
             <Button
-              href="#contact"
+              href={`${root}#contact`}
               variant="primary"
               size="sm"
               className="hidden sm:block"

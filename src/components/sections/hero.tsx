@@ -35,7 +35,7 @@ export function Hero({ t }: { t: Messages["hero"] }) {
           </span>
         </motion.span>
 
-        <h1 className="mt-10 text-balance text-5xl leading-[1.12] tracking-tight md:text-7xl">
+        <h1 className="mt-10 text-balance text-3xl leading-[1.12] tracking-tight md:text-7xl">
           <motion.span
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export function Hero({ t }: { t: Messages["hero"] }) {
           {t.subtitle}
         </motion.p>
 
-        <div className="mt-12 flex gap-4">
+        <div className="mt-12 flex flex-col md:flex-row gap-4">
           <MotionButton
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

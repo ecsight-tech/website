@@ -11,7 +11,7 @@ export function TrustedBy({ t }: { t: Messages["trustedBy"] }) {
           </h2>
         </FadeIn>
         <FadeIn delay={0.1}>
-          <div className="mt-14 overflow-hidden rounded-[2.5rem]">
+          <div className="mt-14 overflow-hidden rounded-2xl md:rounded-[2.5rem]">
             <img
               src="/trusted_company_logos.png"
               alt={t.alt}

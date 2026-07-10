@@ -1,0 +1,297 @@
+---
+import { sanityClient } from "sanity:client";
+
+import Layout from "@/layouts/Layout.astro";
+import { getMessages, localeHref, type Locale } from "@/i18n/ui";
+import { privacyPolicyQuery, siteSettingsQuery } from "@/sanity/lib/queries";
+import { SiteHeader, type HeaderSettings } from "@/components/site/site-header";
+import SiteFooter from "@/components/site/SiteFooter.astro";
+import { PortableBody } from "@/components/PortableBody";
+import type { PortableTextBlock } from "@portabletext/react";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getMessages(locale);
+
+type SiteSettings =
+  | (HeaderSettings & {
+      email?: string;
+      phone?: string;
+      address?: string;
+      description?: string;
+      socials?: { platform?: string; url?: string }[];
+    })
+  | null;
+
+type PolicyDoc = {
+  title?: string;
+  lastUpdated?: string;
+  body?: PortableTextBlock[];
+} | null;
+
+const [settings, policy] = await Promise.all([
+  sanityClient.fetch<SiteSettings>(siteSettingsQuery, { locale }),
+  sanityClient.fetch<PolicyDoc>(privacyPolicyQuery, { locale }),
+]);
+const email = settings?.email;
+
+type Section = {
+  heading: string;
+  paragraphs?: string[];
+  list?: string[];
+  after?: string[];
+};
+
+const content: Record<
+  Locale,
+  {
+    title: string;
+    description: string;
+    updated: string;
+    intro: string[];
+    sections: Section[];
+  }
+> = {
+  en: {
+    title: "Privacy Policy",
+    description:
+      "How Ecsight Group collects, uses, and protects your personal data.",
+    updated: "Last updated: July 10, 2026",
+    intro: [
+      'Ecsight Group Co., Ltd. ("Ecsight", "we") respects your privacy. This policy explains what personal data we collect through this website, how we use it, and the rights you have under Thailand\'s Personal Data Protection Act B.E. 2562 (2019) (PDPA).',
+    ],
+    sections: [
+      {
+        heading: "Information we collect",
+        paragraphs: [
+          "We only collect personal data that you choose to give us, along with the minimal technical data required to operate the site.",
+        ],
+        list: [
+          "Contact form — first name, last name, email address, phone number, company, and your message, submitted when you contact us through the form on our homepage.",
+          "Technical data — our hosting provider keeps standard server logs, which can include your IP address, browser type, and the pages you request. We use these only for security and troubleshooting.",
+        ],
+      },
+      {
+        heading: "How we use your data",
+        list: [
+          "Respond to your message or inquiry.",
+          "Follow up on potential collaboration.",
+          "Keep an internal record of business inquiries.",
+        ],
+        after: [
+          "We process this data on the basis of your consent (given when you submit the form) and our legitimate interest in responding to business inquiries. We do not sell your personal data or use it for automated profiling.",
+        ],
+      },
+      {
+        heading: "Who we share it with",
+        paragraphs: [
+          "When you submit the contact form, your details are stored with two service providers acting as data processors on our behalf:",
+        ],
+        list: [
+          "ClickUp — our task-management system, where each inquiry becomes a task so our team can respond.",
+          "Sanity — our content platform, where a backup copy of your submission is stored.",
+        ],
+        after: [
+          "These providers may store data on servers outside Thailand; we share only what is needed to handle your inquiry. The site also loads fonts from Google Fonts and images from Sanity's CDN — when your browser requests those files, your IP address is sent to these services.",
+        ],
+      },
+      {
+        heading: "Cookies and analytics",
+        paragraphs: [
+          "This website does not set tracking cookies and does not run analytics or advertising scripts.",
+        ],
+      },
+      {
+        heading: "How long we keep your data",
+        paragraphs: [
+          "We keep contact submissions for as long as needed to handle your inquiry and maintain a record of our business communication. You can ask us to delete your data at any time.",
+        ],
+      },
+      {
+        heading: "Your rights",
+        paragraphs: [
+          "Under the PDPA, you have the right to:",
+        ],
+        list: [
+          "Access and receive a copy of your personal data.",
+          "Have inaccurate data corrected.",
+          "Have your data deleted or anonymized.",
+          "Restrict or object to processing.",
+          "Withdraw consent at any time.",
+          "Lodge a complaint with Thailand's Personal Data Protection Committee (PDPC).",
+        ],
+      },
+      {
+        heading: "Contact us",
+        paragraphs: [
+          email
+            ? `If you have questions about this policy or want to exercise your rights, contact us at ${email}.`
+            : "If you have questions about this policy or want to exercise your rights, contact us through the form on our homepage.",
+        ],
+      },
+      {
+        heading: "Changes to this policy",
+        paragraphs: [
+          "We may update this policy from time to time. The latest version will always be published on this page, with the date shown above.",
+        ],
+      },
+    ],
+  },
+  th: {
+    title: "นโยบายความเป็นส่วนตัว",
+    description:
+      "วิธีที่ Ecsight Group เก็บรวบรวม ใช้ และคุ้มครองข้อมูลส่วนบุคคลของคุณ",
+    updated: "ปรับปรุงล่าสุด: 10 กรกฎาคม 2569",
+    intro: [
+      "Ecsight Group Co., Ltd. (“เรา”) ให้ความสำคัญกับความเป็นส่วนตัวของคุณ นโยบายฉบับนี้อธิบายว่าเราเก็บรวบรวมข้อมูลส่วนบุคคลใดบ้างผ่านเว็บไซต์นี้ นำไปใช้อย่างไร และคุณมีสิทธิอะไรบ้างตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)",
+    ],
+    sections: [
+      {
+        heading: "ข้อมูลที่เราเก็บรวบรวม",
+        paragraphs: [
+          "เราเก็บเฉพาะข้อมูลส่วนบุคคลที่คุณเลือกให้กับเรา และข้อมูลทางเทคนิคเท่าที่จำเป็นต่อการให้บริการเว็บไซต์",
+        ],
+        list: [
+          "แบบฟอร์มติดต่อ — ชื่อ นามสกุล อีเมล เบอร์โทรศัพท์ ชื่อบริษัท และข้อความของคุณ เมื่อคุณติดต่อเราผ่านแบบฟอร์มบนหน้าแรก",
+          "ข้อมูลทางเทคนิค — ผู้ให้บริการโฮสติ้งของเราเก็บบันทึกเซิร์ฟเวอร์มาตรฐาน เช่น IP address ประเภทเบราว์เซอร์ และหน้าที่คุณเข้าชม เราใช้ข้อมูลนี้เพื่อความปลอดภัยและการแก้ไขปัญหาเท่านั้น",
+        ],
+      },
+      {
+        heading: "วัตถุประสงค์ในการใช้ข้อมูล",
+        list: [
+          "ตอบกลับข้อความและคำถามของคุณ",
+          "ติดตามผลเกี่ยวกับโอกาสในการร่วมงาน",
+          "เก็บบันทึกการติดต่อทางธุรกิจภายในบริษัท",
+        ],
+        after: [
+          "เราประมวลผลข้อมูลนี้บนฐานความยินยอมของคุณ (เมื่อคุณส่งแบบฟอร์ม) และประโยชน์โดยชอบด้วยกฎหมายในการตอบข้อซักถามทางธุรกิจ เราไม่ขายข้อมูลส่วนบุคคลของคุณ และไม่นำไปใช้ทำโปรไฟล์อัตโนมัติ",
+        ],
+      },
+      {
+        heading: "การเปิดเผยข้อมูลต่อบุคคลที่สาม",
+        paragraphs: [
+          "เมื่อคุณส่งแบบฟอร์มติดต่อ ข้อมูลของคุณจะถูกจัดเก็บโดยผู้ให้บริการสองรายซึ่งทำหน้าที่เป็นผู้ประมวลผลข้อมูลในนามของเรา:",
+        ],
+        list: [
+          "ClickUp — ระบบจัดการงานของเรา ซึ่งแต่ละข้อความจะถูกสร้างเป็นงานเพื่อให้ทีมของเราตอบกลับ",
+          "Sanity — แพลตฟอร์มคอนเทนต์ของเรา ซึ่งเก็บสำเนาสำรองของข้อมูลที่คุณส่ง",
+        ],
+        after: [
+          "ผู้ให้บริการเหล่านี้อาจจัดเก็บข้อมูลบนเซิร์ฟเวอร์นอกประเทศไทย เราแบ่งปันเฉพาะข้อมูลที่จำเป็นต่อการดำเนินการตามคำขอของคุณ นอกจากนี้เว็บไซต์โหลดฟอนต์จาก Google Fonts และรูปภาพจาก CDN ของ Sanity ซึ่งเบราว์เซอร์ของคุณจะส่ง IP address ไปยังบริการเหล่านั้นเมื่อโหลดไฟล์",
+        ],
+      },
+      {
+        heading: "คุกกี้และการวิเคราะห์",
+        paragraphs: [
+          "เว็บไซต์นี้ไม่ตั้งค่าคุกกี้ติดตาม และไม่ใช้สคริปต์วิเคราะห์หรือโฆษณาใด ๆ",
+        ],
+      },
+      {
+        heading: "ระยะเวลาการเก็บรักษาข้อมูล",
+        paragraphs: [
+          "เราเก็บข้อมูลจากแบบฟอร์มติดต่อไว้ตราบเท่าที่จำเป็นต่อการดำเนินการตามคำขอของคุณและการเก็บบันทึกการติดต่อทางธุรกิจ คุณสามารถขอให้เราลบข้อมูลของคุณได้ทุกเมื่อ",
+        ],
+      },
+      {
+        heading: "สิทธิของคุณ",
+        paragraphs: ["ตาม PDPA คุณมีสิทธิดังนี้:"],
+        list: [
+          "ขอเข้าถึงและขอรับสำเนาข้อมูลส่วนบุคคลของคุณ",
+          "ขอแก้ไขข้อมูลให้ถูกต้อง",
+          "ขอให้ลบหรือทำให้ข้อมูลไม่สามารถระบุตัวตนได้",
+          "ขอให้ระงับการใช้หรือคัดค้านการประมวลผล",
+          "ถอนความยินยอมได้ทุกเมื่อ",
+          "ร้องเรียนต่อคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.)",
+        ],
+      },
+      {
+        heading: "ติดต่อเรา",
+        paragraphs: [
+          email
+            ? `หากมีคำถามเกี่ยวกับนโยบายนี้หรือต้องการใช้สิทธิของคุณ ติดต่อเราได้ที่ ${email}`
+            : "หากมีคำถามเกี่ยวกับนโยบายนี้หรือต้องการใช้สิทธิของคุณ ติดต่อเราผ่านแบบฟอร์มบนหน้าแรกของเรา",
+        ],
+      },
+      {
+        heading: "การเปลี่ยนแปลงนโยบาย",
+        paragraphs: [
+          "เราอาจปรับปรุงนโยบายนี้เป็นครั้งคราว ฉบับล่าสุดจะเผยแพร่บนหน้านี้พร้อมวันที่ด้านบนเสมอ",
+        ],
+      },
+    ],
+  },
+};
+
+// Sanity document wins; the inline dictionary above is the fallback until
+// (or in case) the CMS document is removed.
+const c = content[locale];
+const updatedPrefix = locale === "th" ? "ปรับปรุงล่าสุด: " : "Last updated: ";
+const title = policy?.title || c.title;
+const updated = policy?.lastUpdated
+  ? updatedPrefix +
+    new Intl.DateTimeFormat(locale === "th" ? "th-TH" : "en-US", {
+      dateStyle: "long",
+    }).format(new Date(policy.lastUpdated))
+  : c.updated;
+const body = policy?.body;
+---
+
+<Layout
+  locale={locale}
+  title={`${title} — Ecsight Group`}
+  description={c.description}
+>
+  <SiteHeader
+    client:load
+    settings={settings ?? undefined}
+    locale={locale}
+    t={t.nav}
+    root={localeHref(locale)}
+    pathname={Astro.url.pathname}
+  />
+  <main class="mx-auto w-full max-w-3xl px-6 py-20 md:py-28">
+    <h1 class="text-4xl tracking-tight md:text-5xl">{title}</h1>
+    <p class="mt-4 text-sm text-foreground/50">{updated}</p>
+    {
+      body ? (
+        <PortableBody value={body} />
+      ) : (
+        <>
+          {c.intro.map((p) => (
+            <p class="mt-6 leading-relaxed text-foreground/70">{p}</p>
+          ))}
+          {c.sections.map((s) => (
+            <section class="mt-12">
+              <h2 class="text-2xl tracking-tight">{s.heading}</h2>
+              {s.paragraphs?.map((p) => (
+                <p class="mt-4 leading-relaxed text-foreground/70">{p}</p>
+              ))}
+              {s.list ? (
+                <ul class="mt-4 list-disc space-y-2 pl-6 leading-relaxed text-foreground/70">
+                  {s.list.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              ) : null}
+              {s.after?.map((p) => (
+                <p class="mt-4 leading-relaxed text-foreground/70">{p}</p>
+              ))}
+            </section>
+          ))}
+        </>
+      )
+    }
+  </main>
+  <SiteFooter
+    locale={locale}
+    email={email}
+    phone={settings?.phone}
+    address={settings?.address}
+    socials={settings?.socials}
+    description={settings?.description}
+    t={t.footer}
+  />
+</Layout>

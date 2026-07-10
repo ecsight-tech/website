@@ -136,7 +136,7 @@ const { t, email, phone, address } = Astro.props;
 
     {/* right: form in gradient-bordered card */}
     <div
-      class="rounded-[3rem] bg-linear-to-br via-80% from-primary via-cyan-500 to-indigo-500 p-1"
+      class="rounded-3xl md:rounded-[3rem] bg-linear-to-br via-80% from-primary via-cyan-500 to-indigo-500 p-1"
     >
       <ContactForm client:visible t={t.contact} />
     </div>

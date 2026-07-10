@@ -26,9 +26,9 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
     message: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
-  const [status, setStatus] = useState<
-    "idle" | "sending" | "sent" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
 
   const set = (field: Field, value: string) => {
     setValues((v) => ({ ...v, [field]: value }));
@@ -67,7 +67,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
 
   if (status === "sent") {
     return (
-      <FadeIn className="flex flex-col items-center gap-4 rounded-[3rem] bg-background px-8 py-20 text-center">
+      <FadeIn className="flex flex-col items-center gap-4 rounded-3xl md:rounded-[3rem] bg-background px-8 py-20 text-center">
         <span className="flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
           <FiCheck className="size-7" />
         </span>
@@ -80,7 +80,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="flex flex-col gap-5 rounded-[3rem] bg-background p-6 sm:p-10"
+      className="flex flex-col gap-5 rounded-3xl md:rounded-[3rem] bg-background p-6 sm:p-10"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
@@ -91,6 +91,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
           error={errors.firstName}
           onChange={(v) => set("firstName", v)}
           required
+          className="col-span-2 md:col-span-1"
         />
         <TextField
           id="lastName"
@@ -100,6 +101,7 @@ export function ContactForm({ t }: { t: Messages["contact"] }) {
           error={errors.lastName}
           onChange={(v) => set("lastName", v)}
           required
+          className="col-span-2 md:col-span-1"
         />
         <TextField
           id="email"

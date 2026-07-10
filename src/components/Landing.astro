@@ -63,6 +63,7 @@ const email = settings?.email;
     settings={settings ?? undefined}
     locale={locale}
     t={t.nav}
+    pathname={Astro.url.pathname}
   />
   <main>
     <Hero client:load t={t.hero} />
@@ -74,7 +75,6 @@ const email = settings?.email;
       items={mediaEvents}
       heading={t.mediaEvent.heading}
     /> -->
-    <Partners client:load partners={partners} heading={t.partners.heading} />
     <Academy client:visible items={academy} heading={t.academy.heading} />
     <!-- <CTA client:load email={email} t={t.cta} /> -->
     <!-- <ContentShowcase
@@ -83,6 +83,7 @@ const email = settings?.email;
       heading={t.showcase.heading}
     /> -->
     <Work client:visible projects={projects} t={t.work} />
+    <Partners client:load partners={partners} heading={t.partners.heading} />
     <Contact
       t={t}
       email={email}
@@ -92,6 +93,7 @@ const email = settings?.email;
     />
   </main>
   <SiteFooter
+    locale={locale}
     email={email}
     phone={settings?.phone}
     address={settings?.address}

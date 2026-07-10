@@ -28,11 +28,11 @@ export function Services({
           </h2>
         </FadeIn>
 
-        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="group/services mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
             <StaggerItem
               key={s._id}
-              className="group relative flex aspect-3/4 flex-col overflow-hidden rounded-4xl bg-linear-to-b from-white/[0.04] from-35% to-[#16246e] transition-transform duration-300 hover:-translate-y-1.5"
+              className="group relative flex aspect-3/4 flex-col overflow-hidden rounded-4xl bg-linear-to-b from-white/[0.04] from-35% to-[#16246e] transition-[transform,filter] duration-300 group-hover/services:grayscale-100 group-hover/services:hover:grayscale-0"
             >
               {s.image ? (
                 <img
@@ -49,7 +49,7 @@ export function Services({
               {s.image ? (
                 <div
                   aria-hidden
-                  className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-transparent"
+                  className="absolute inset-0 bg-linear-to-t from-primary/80 via-primary/25 to-transparent"
                 />
               ) : null}
               <h3 className="relative mt-auto pb-12 text-center font-heading text-3xl md:text-[2.5rem]">

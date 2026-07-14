@@ -144,7 +144,7 @@ export const POST: APIRoute = async ({ request }) => {
       _type: "contactSubmission",
       ...data,
       submittedAt,
-      clickupTaskId,
+      // clickupTaskId,
     });
   } catch (err) {
     console.error("[contact] Sanity write failed:", err);

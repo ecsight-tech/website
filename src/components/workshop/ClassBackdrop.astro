@@ -1,0 +1,29 @@
+---
+// Faint class photos behind a card's content, cross-fading every 3s (see
+// .class-backdrop in BuildAppsWithAI.astro): greyscale and low opacity. The
+// parent needs `relative isolate overflow-hidden`; pass a mask via `class` to
+// fade the photos out behind text.
+interface Props {
+  photos: string[];
+  class?: string;
+}
+
+const { photos, class: className } = Astro.props;
+---
+
+<div
+  aria-hidden="true"
+  class:list={["absolute inset-0 -z-10 opacity-20 grayscale", className]}
+>
+  {
+    photos.map((src, i) => (
+      <img
+        src={src}
+        alt=""
+        loading={i === 0 ? "eager" : "lazy"}
+        class="class-backdrop absolute inset-0 size-full object-cover"
+        style={`--i: ${i}; --n: ${photos.length}`}
+      />
+    ))
+  }
+</div>

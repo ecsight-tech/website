@@ -10,6 +10,7 @@ import { HeroSpeakers } from "@/components/workshop/hero-speakers";
 import { ScrollExpandCard } from "@/components/workshop/scroll-expand-card";
 import { WhyLoop, type WhyLoopVariant } from "@/components/workshop/why-loops";
 import { PhotoStack } from "@/components/workshop/photo-stack";
+import ClassBackdrop from "@/components/workshop/ClassBackdrop.astro";
 import { SendExpand, type SendExpandContent } from "@/components/workshop/send-expand";
 
 // TODO: replace with the real registration / payment link.
@@ -318,6 +319,9 @@ const content = {
   },
 };
 
+// Price shown in the mobile CTA bar: the highlighted plan.
+const barPlan = content.plans.find((p) => p.featured) ?? content.plans[0];
+
 // Black card with a warm mesh glow rising from the bottom-right corner
 // (see .banner-mesh below).
 const gradientCard = "banner-mesh text-white";
@@ -343,18 +347,20 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap"
   />
-  <!-- Sticky navbar: full-width at the top, then (data-scrolled) it
-       tightens into a floating white pill. Slides away (data-hidden) while
-       the full-screen app panel is on screen. See the script below. -->
+  <!-- Sticky navbar. Mobile: a plain white bar with a hamburger menu (the CTA
+       lives in the fixed bottom bar instead). Desktop: full-width at the top,
+       then (data-scrolled) it tightens into a floating white pill. Both slide
+       away (data-hidden) while the full-screen app panel is on screen. See
+       the script below. -->
   <header
     data-nav
-    class="group/nav sticky top-0 z-50 px-2 transition-[transform,padding] duration-500 ease-out data-[hidden]:-translate-y-[120%] data-[scrolled]:pt-3 md:px-3"
+    class="group/nav sticky top-0 z-50 transition-[transform,padding] duration-500 ease-out data-[hidden]:-translate-y-[120%] lg:px-3 lg:data-[scrolled]:pt-3"
   >
     <div
-      class="mx-auto flex max-w-[100%] items-center gap-6 rounded-full px-3 py-4 transition-[max-width,padding,background-color] duration-500 ease-out group-data-[scrolled]/nav:max-w-5xl group-data-[scrolled]/nav:bg-white group-data-[scrolled]/nav:py-2 group-data-[scrolled]/nav:pr-2 group-data-[scrolled]/nav:pl-6 group-data-[scrolled]/nav:ring-1 group-data-[scrolled]/nav:ring-black/5 md:px-4"
+      class="relative mx-auto flex max-w-[100%] items-center gap-6 border-b border-black/5 bg-white px-5 py-3 transition-[max-width,padding,background-color] duration-500 ease-out lg:rounded-full lg:border-0 lg:bg-transparent lg:px-4 lg:py-4 lg:group-data-[scrolled]/nav:max-w-5xl lg:group-data-[scrolled]/nav:bg-white lg:group-data-[scrolled]/nav:py-2 lg:group-data-[scrolled]/nav:pr-2 lg:group-data-[scrolled]/nav:pl-6 lg:group-data-[scrolled]/nav:ring-1 lg:group-data-[scrolled]/nav:ring-black/5"
     >
-      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-9 w-auto transition-[height] duration-500 group-data-[scrolled]/nav:h-7" />
-      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-8 w-auto transition-[height] duration-500 group-data-[scrolled]/nav:h-6" />
+      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-7 w-auto transition-[height] duration-500 lg:h-9 lg:group-data-[scrolled]/nav:h-7" />
+      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-6 w-auto transition-[height] duration-500 lg:h-8 lg:group-data-[scrolled]/nav:h-6" />
       <!-- Section links (Lenis smooth-scrolls #anchors); desktop only. -->
       <nav aria-label="เมนู" class="ml-auto hidden items-center gap-1 lg:flex">
         {
@@ -370,19 +376,54 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
       </nav>
       <a
         href={REGISTER_URL}
-        class="ml-auto rounded-full bg-black px-5 py-2.5 font-semibold text-white transition-transform duration-300 hover:scale-[1.03] lg:ml-2"
+        class="ml-2 hidden rounded-full bg-black px-5 py-2.5 font-semibold text-white transition-transform duration-300 hover:scale-[1.03] lg:inline-flex"
       >
         {content.navCta}
       </a>
+      <!-- Mobile menu toggle: hamburger ↔ close. -->
+      <button
+        type="button"
+        data-menu-toggle
+        aria-label="เปิดเมนู"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="-mr-2 ml-auto flex size-10 cursor-pointer items-center justify-center rounded-full lg:hidden"
+      >
+        <svg viewBox="0 0 24 24" class="size-6 group-data-[open]/nav:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <svg viewBox="0 0 24 24" class="hidden size-6 group-data-[open]/nav:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
     </div>
+    <nav
+      id="mobile-menu"
+      aria-label="เมนู"
+      class="absolute inset-x-0 top-full hidden border-b border-black/5 bg-white px-5 pb-3 group-data-[open]/nav:block lg:hidden"
+    >
+      {
+        content.nav.map((l) => (
+          <a href={l.href} class="block border-b border-black/5 py-3.5 text-lg last:border-0">
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
   </header>
 
   <main class="flex flex-col gap-24 md:gap-40">
     <!-- Hero -->
     <section class="w-full px-2 md:px-3">
       <div
-        class:list={[gradientCard, "relative overflow-hidden rounded-[2rem]"]}
+        class:list={[gradientCard, "relative isolate overflow-hidden rounded-[2rem]"]}
       >
+        <!-- Faint class photos, masked out toward the left so the headline
+             stays readable. -->
+        <ClassBackdrop
+          photos={content.classPhotos}
+          class="[mask-image:linear-gradient(to_right,transparent_10%,black_65%)]"
+        />
         <div class="grid items-end gap-8 lg:grid-cols-2">
           <div class="px-6 pt-12 pb-4 md:px-12 md:pt-20 lg:pb-20">
             <p class="text-[#ff7a2a] md:text-lg">{content.eyebrow}</p>
@@ -518,9 +559,13 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
       <div
         class:list={[
           gradientCard,
-          "flex flex-col items-start justify-between gap-8 rounded-[2rem] px-6 py-12 md:flex-row md:items-center md:px-12 md:py-12",
+          "relative isolate flex flex-col items-start justify-between gap-8 overflow-hidden rounded-[2rem] px-6 py-12 md:flex-row md:items-center md:px-12 md:py-12",
         ]}
       >
+        <ClassBackdrop
+          photos={content.classPhotos}
+          class="[mask-image:linear-gradient(to_right,transparent_10%,black_65%)]"
+        />
         <div>
           <p class="text-[#ff7a2a]">{content.eyebrow}</p>
           <p class="mt-3 text-2xl leading-snug md:text-4xl">
@@ -657,9 +702,10 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
          scrolls in. -->
     <section class="w-full">
       <ScrollExpandCard
-        client:visible
-        className={`${gradientCard} flex flex-col items-center px-6 pt-20 pb-40 text-center md:pt-28 md:pb-60`}
+        client:load
+        className={`${gradientCard} relative isolate flex flex-col items-center px-6 pt-20 pb-40 text-center md:pt-28 md:pb-60`}
       >
+        <ClassBackdrop photos={content.classPhotos} />
         <h2 class="text-3xl leading-snug md:text-5xl md:leading-tight">
           {content.finalHeadline[0]}<br />{content.finalHeadline[1]}
         </h2>
@@ -672,7 +718,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
   </main>
 
   <footer
-    class="flex flex-col items-center gap-4 px-5 py-8 text-sm text-foreground/50 md:flex-row md:justify-between md:px-7"
+    class="flex flex-col items-center gap-4 px-5 pt-8 pb-28 text-sm lg:pb-8 text-foreground/50 md:flex-row md:justify-between md:px-7"
   >
     <div class="flex items-center gap-4">
       <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-7 w-auto" />
@@ -689,12 +735,47 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
       }
     </nav>
   </footer>
+
+  <!-- Mobile CTA bar, fixed to the bottom of the screen: featured plan's price
+       and discount + CTA (the footer's bottom padding keeps it from covering
+       the links). Hides with the navbar. -->
+  <div
+    data-cta-bar
+    class="fixed inset-x-0 bottom-0 z-40 border-t border-black/5 bg-white/90 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-transform duration-500 ease-out data-[hidden]:translate-y-full lg:hidden"
+  >
+    <div class="flex items-center gap-3">
+      <div class="min-w-0 flex-1 leading-tight">
+        <p class="flex items-baseline gap-2">
+          <span class="text-xl font-semibold">{barPlan.price} บาท</span>
+          <span class="truncate text-sm text-foreground/40 line-through">{barPlan.was}</span>
+        </p>
+        <p class="mt-0.5 truncate text-sm text-[#ff6a13]">
+          ลด {barPlan.discount} · โค้ด {barPlan.code}
+        </p>
+      </div>
+      <a href={REGISTER_URL} class:list={[orangePill, "shrink-0 px-6 py-3 text-base"]}>
+        {content.navCta}
+      </a>
+    </div>
+  </div>
 </Layout>
 
 <script>
-  // Navbar: pill once scrolled past the top; hidden while the send-expand
-  // stage (full-screen app panel) covers the middle of the viewport.
+  // Navbar: pill once scrolled past the top (desktop); navbar and the mobile
+  // CTA bar hide while the send-expand stage (full-screen app panel) covers
+  // the middle of the viewport.
   const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const ctaBar = document.querySelector<HTMLElement>("[data-cta-bar]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const setMenu = (open: boolean) => {
+    nav?.toggleAttribute("data-open", open);
+    toggle?.setAttribute("aria-expanded", String(open));
+    toggle?.setAttribute("aria-label", open ? "ปิดเมนู" : "เปิดเมนู");
+  };
+  toggle?.addEventListener("click", () => setMenu(!nav?.hasAttribute("data-open")));
+  // Close after picking a section.
+  document.querySelectorAll("#mobile-menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+
   if (nav) {
     const onScroll = () => nav.toggleAttribute("data-scrolled", window.scrollY > 40);
     onScroll();
@@ -704,7 +785,10 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) e.isIntersecting ? hideFor.add(e.target) : hideFor.delete(e.target);
-        nav.toggleAttribute("data-hidden", hideFor.size > 0);
+        const hidden = hideFor.size > 0;
+        nav.toggleAttribute("data-hidden", hidden);
+        ctaBar?.toggleAttribute("data-hidden", hidden);
+        if (hidden) setMenu(false);
       },
       { rootMargin: "-50% 0px -50% 0px" },
     );
@@ -818,6 +902,36 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 </script>
 
 <style is:global>
+  /* Class-photo backdrop slideshow: every photo runs the same cycle (3s each), and
+     a negative delay offsets photo i so photo 0 shows immediately and each
+     one fades in as the previous fades out. Reduced motion keeps photo 0. */
+  .class-backdrop {
+    opacity: 0;
+    animation: class-backdrop calc(var(--n) * 3s) linear infinite;
+    animation-delay: calc((var(--i) - var(--n)) * 3s);
+  }
+  @keyframes class-backdrop {
+    0%,
+    25% {
+      opacity: 1;
+    }
+    33%,
+    92% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .class-backdrop {
+      animation: none;
+    }
+    .class-backdrop:first-child {
+      opacity: 1;
+    }
+  }
+
   /* Nav anchor targets land below the floating navbar pill. */
   [data-anchor] {
     scroll-margin-top: 7rem;

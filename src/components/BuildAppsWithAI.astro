@@ -1,0 +1,985 @@
+---
+import { existsSync } from "node:fs";
+import { CheckIcon } from "@solar-icons/react/linear";
+import { CalendarIcon, GiftIcon, MapPointIcon, PauseIcon, PlayIcon } from "@solar-icons/react/bold";
+
+import Layout from "@/layouts/Layout.astro";
+import { Accordion, type AccordionItem } from "@/components/workshop/accordion";
+import { InstructorStack } from "@/components/workshop/instructor-stack";
+import { HeroSpeakers } from "@/components/workshop/hero-speakers";
+import { ScrollExpandCard } from "@/components/workshop/scroll-expand-card";
+import { WhyLoop, type WhyLoopVariant } from "@/components/workshop/why-loops";
+import { PhotoStack } from "@/components/workshop/photo-stack";
+import { SendExpand, type SendExpandContent } from "@/components/workshop/send-expand";
+
+// TODO: replace with the real registration / payment link.
+const REGISTER_URL = "#";
+
+// Instructor cut-outs live in /public/workshop — render a placeholder until
+// they're added.
+const photo = (file: string) =>
+  existsSync(`public/workshop/${file}`) ? `/workshop/${file}` : undefined;
+
+type Card = { title: string; body: string };
+type Plan = {
+  name: string;
+  badge: string;
+  was: string;
+  price: string;
+  code: string;
+  discount: string;
+  features: string[];
+  note: string;
+  featured?: boolean;
+  bonus?: { label: string; title: string; body: string };
+};
+
+const content = {
+  nav: [
+    { href: "#agenda", label: "เรียนอะไรบ้าง" },
+    { href: "#instructors", label: "ผู้สอน" },
+    { href: "#reviews", label: "รีวิว" },
+    { href: "#pricing", label: "ราคา" },
+    { href: "#faq", label: "คำถามที่พบบ่อย" },
+  ],
+  navCta: "จองที่นั่ง",
+
+  eyebrow: "รุ่นที่ 1 กำลังเปิดรับสมัคร",
+  headline: ["เรียนสร้างแอปด้วย AI", "ทำเป็นใน 1 วัน ไม่ต้องมีพื้นฐาน"],
+  // Phrase in the headline that gets the hand-drawn underline.
+  headlineHighlight: "ไม่ต้องมีพื้นฐาน",
+  subtitle:
+    "คลาสเรียนสด 1 วัน สำหรับคนทำธุรกิจ ที่อยากเริ่มต้นสร้างเครื่องมือใช้เอง สอนโดย developer ตัวจริง ไม่ต้องเขียนโค้ดเป็น ไม่ต้องมีพื้นฐาน ก็เริ่มต้นได้",
+  date: ["31 ตุลาคม 2569", "09:00 - 17:00 น."],
+  venue: ["KX Building", "BTS วงเวียนใหญ่ (มีที่จอดรถ)"],
+  cta: "จองที่นั่งเลย (จำกัด 20 ท่าน)",
+  promo: "กรอกโค้ด XXXX เหลือ 4,990 บาท จาก 6,990 บาท",
+
+  whyHeading: ["เรื่องโค้ดมันซับซ้อน", "เราเลยคิดมาให้ เพื่อให้คุณเข้าใจง่าย ๆ"],
+  why: [
+    {
+      title: "พาสร้างเว็บแอปตั้งแต่แบบง่าย จนครบเต็มระบบ",
+      body: "เริ่มจากไอเดีย จนได้แอปที่นำไปใช้งานได้จริง",
+      loop: "stack",
+    },
+    {
+      title: "วิธีคิด มุมมอง ไอเดีย ในการสร้างแอป แบบ developer ตัวจริง",
+      body: "เข้าใจเบื้องหลังการสร้างแอปจริง ๆ ไม่ใช่แค่ทำตาม",
+      loop: "orbit",
+    },
+    {
+      title: "ไม่ต้องมีพื้นฐาน ไม่ต้องเขียนโค้ดเอง มาเริ่มต้นพร้อมกันได้เลย",
+      body: "ปล่อยให้ AI เป็นคนเขียนโค้ด เรียนแค่วิธีควบคุมก็พอ",
+      loop: "chat",
+    },
+  ] satisfies (Card & { loop: WhyLoopVariant })[],
+
+  perksHeading: [
+    "เราอยากให้เงินที่คุณจ่ายมาคุ้มค่า",
+    "นอกจากการเรียน นี่คือสิ่งที่คุณจะได้จากเรา",
+  ],
+  perks: [
+    {
+      title: "ตัวช่วยต่าง ๆ ให้คุณ ลงมือทำได้ง่ายที่สุด",
+      body: "Template code, Skills, Guide book เราเตรียมไว้ให้คุณพร้อมทั้งหมด",
+    },
+    {
+      title: "สงสัยตรงไหน มีทีมพร้อมช่วยเหลือทันที",
+      body: "ขณะลงมือทำในห้องเรียน คุณขอความช่วยเหลือได้ตลอด",
+    },
+    {
+      title: "โอกาส connect คนทำธุรกิจในสายงานอื่น ๆ",
+      body: "ปกติผู้เรียนของเรา เป็นคนทำธุรกิจใน หลากหลายอาชีพ และหลากหลายช่วงอายุ",
+    },
+    {
+      title: "Private community หลังคลาสเรียน",
+      body: "อัพเดตข่าวสาร และเทคนิค และ use case ต่าง ๆ เกี่ยวกับ AI",
+    },
+    {
+      title: "วิดีโอย้อนหลัง ให้คุณอยากทบทวนได้ตลอด",
+      body: "พลาดตรงไหนไปในคลาสสด ก็กลับมาเรียนซ้ำได้ตลอด",
+    },
+    {
+      title: "ส่วนลดพิเศษ เมื่อกลับมาเรียนคลาส ถัดไปกับเราอีก",
+      body: "เช่น จากราคา 4,990 บาท → 1590 บาท เพราะเราถือว่าคุณมาเรียนเพื่อทบทวน",
+    },
+  ] satisfies Card[],
+
+  agendaHeading: ["สิ่งที่คุณจะได้เรียนรู้", "จากการลงมือทำจริงภายใน 1 วัน"],
+  // Past workshop photos under the agenda heading, shown as a cycling stack.
+  classPhotos: [1, 2, 3, 4].map((n) => `/workshop/class/class-${n}.webp`),
+  classPhotosCaption: "บรรยากาศคลาสที่ผ่านมา",
+  // Scroll expansion after "Why simple": a pill that grows into a
+  // full-screen panel previewing the example app.
+  showcase: {
+    pill: "ลงมือทำจริง ใช้งานได้จริง",
+    heading: "ตัวอย่างแอปที่คุณจะได้สร้างภายใน 1 วัน",
+    features: [
+      {
+        screen: "form",
+        title: "ฟอร์มรับข้อมูล",
+        body: "หน้าจอให้ทีมกรอกข้อมูลลูกค้าและรายการสินค้า แทนการพิมพ์ใน Excel หรือแชต",
+      },
+      {
+        screen: "rules",
+        title: "คำนวณตามกฎธุรกิจ",
+        body: "ระบบคิดราคา ส่วนลดลูกค้าประจำ และ VAT ให้อัตโนมัติ ตามเงื่อนไขของธุรกิจคุณ",
+      },
+      {
+        screen: "dashboard",
+        title: "Dashboard สรุปผล",
+        body: "เห็นภาพรวมยอดขายและสถานะงานทั้งเดือนในหน้าเดียว",
+      },
+      {
+        screen: "database",
+        title: "ฐานข้อมูลลูกค้า",
+        body: "ทุกรายการถูกเก็บไว้ในฐานข้อมูล ค้นหาย้อนหลังและติดตามสถานะได้ตลอด",
+      },
+      {
+        screen: "launch",
+        title: "ออนไลน์ด้วย Live URL",
+        body: "นำแอปขึ้นออนไลน์ ได้ลิงก์จริงที่ส่งให้ทีมหรือลูกค้าใช้งานได้ทันที",
+      },
+    ],
+  } satisfies SendExpandContent,
+  agenda: [
+    {
+      icon: "idea",
+      label: "09.00 - 09.30",
+      title: "From Idea to Live App",
+      body: "ดูตัวอย่าง Business App ที่สร้างและเปิดใช้งานจริง พร้อมทำความเข้าใจเส้นทางตั้งแต่การเลือกไอเดีย วางแผน สร้าง ทดสอบ จนถึง Launch",
+    },
+    {
+      icon: "target",
+      label: "09.30 - 10.30",
+      title: "Find the Right Problem, Build the Right App Workshop #1",
+      body: "เลือกปัญหาธุรกิจที่ควรแก้ เปลี่ยนให้เป็นไอเดียแอปที่ชัดเจน และกำหนดว่าแอปนี้สร้างให้ใคร ต้องรับข้อมูลอะไร และควรสร้างผลลัพธ์แบบไหน",
+    },
+    {
+      icon: "blueprint",
+      label: "10.40 - 12.00",
+      title: "Build Your App Blueprint + Workshop #2",
+      body: "เปลี่ยนไอเดียและ MVP ให้กลายเป็น Requirement และแผนการสร้างแอปที่ชัดเจน เพื่อให้ AI เข้าใจเป้าหมาย ขอบเขต และกฎของโปรเจกต์ตรงกับผู้เรียน",
+    },
+    { title: "Lunch Break", icon: "lunch", divider: true },
+    {
+      icon: "code",
+      label: "13.00 - 13.40",
+      title: "Bring Your Business App to Life + Workshop #3",
+      body: "นำ Product Blueprint และ Build Plan ที่เตรียมไว้ มาเปลี่ยนให้กลายเป็นโครงสร้างและหน้าจอของ Business App เวอร์ชันแรก",
+    },
+    {
+      icon: "settings",
+      label: "13.40 - 14.10",
+      title: "Make the Core Experience Work + Workshop #4",
+      body: "สร้าง Core Workflow ให้ทำงานครบตั้งแต่ผู้ใช้กรอกข้อมูล ระบบประมวลผลตาม Business Rules และแสดงผลลัพธ์ที่ผู้ใช้ต้องการ",
+    },
+    {
+      icon: "bug",
+      label: "14.10 - 15.20",
+      title: "Test, Fix & Launch + Workshops #5–6",
+      body: "ทดสอบ แก้ Error เชื่อมฐานข้อมูล และนำแอปขึ้นออนไลน์จนได้ Live URL ที่ใช้งานจริง",
+    },
+    {
+      icon: "laptop",
+      label: "15.30 - 17.00",
+      title: "Founder Build Lab: Build It Your Way",
+      body: "พัฒนา Business App ของคุณต่อ พร้อมรับคำปรึกษาเรื่อง Scope, Logic, Database และการแก้ปัญหา",
+    },
+    {
+      icon: "showcase",
+      label: "17.00 - 17.30",
+      title: "Launch Showcase & Your Next Move",
+      body: "นำเสนอแอปที่สร้างเสร็จพร้อม Live URL รับฟีดแบ็กจากผู้สอนและเพื่อนร่วมคลาส แล้ววางแผนขั้นต่อไป ทั้งการพัฒนาฟีเจอร์เพิ่ม และการนำแอปไปใช้จริงในธุรกิจของคุณ",
+    },
+  ] satisfies AccordionItem[],
+
+  bannerHeadline: ["เรียนสร้างแอปด้วย AI", "ทำเป็นใน 1 วัน ไม่ต้องมีพื้นฐาน"],
+
+  instructorsHeading: [
+    "เรียนกับคนที่ทำงานสายเทคตัวจริง",
+    "มีประสบการณ์จริง ทำแอปเองมาก่อนยุค AI",
+  ],
+  instructors: [
+    {
+      name: "จตวัฒน์ เซี่ย",
+      nickname: "(เซฟ)",
+      org: "Ecsight Group & Data Echooo",
+      bio: "วิทยากรด้าน Innovation, Data, AI และการบริหารจัดการงาน มีประสบการณ์ในบทบาท Product Manager มากกว่า 5 ปี ดูแลผลิตภัณฑ์ด้าน Data, AI และ MarTech ในองค์กรชั้นนำ",
+      photo: photo("instructor-chef.webp"),
+      logos: true,
+    },
+    {
+      name: "ณรงค์รัชช์ ธนจารุสวัสดิ์",
+      nickname: "(เจโรม)",
+      org: "Vibe Code กับ Jerome & Webcraftsman",
+      bio: "Software developer",
+      photo: photo("instructor-jerome.webp"),
+      logos: false,
+    },
+  ],
+
+  testimonialsHeading: ["ลองฟังรีวิวจากผู้เรียน", "คลาสต่าง ๆ ของเรา"],
+  // Encoded into /public/workshop/testimonials as <slug>.webp (poster),
+  // <slug>.av1.mp4 and <slug>.hevc.mp4.
+  testimonials: [
+    { slug: "claude-workshop-5", title: "Claude Workshop รุ่น 5" },
+    { slug: "ai-in-house-training", title: "AI In-house Training" },
+    { slug: "claude-workshop-4", title: "Claude Workshop รุ่น 4" },
+    { slug: "build-impact-for-business", title: "Build Impact for Business" },
+    { slug: "claude-workshop-3", title: "Claude Workshop รุ่น 3" },
+    { slug: "claude-workshop-2", title: "Claude Workshop รุ่น 2" },
+  ],
+
+  pricingHeading: "ราคา Workshop รุ่นที่ 1",
+  plans: [
+    {
+      name: "Solo",
+      badge: "ยอดนิยมที่สุด",
+      was: "6,990 บาท",
+      price: "5,290",
+      code: "ECHO1700",
+      discount: "1,700 บาท",
+      featured: true,
+      features: [
+        "ผู้เรียน 1 ที่นั่ง",
+        "Workshop เต็มวัน (09:00 - 17:30 น.)",
+        "ใบประกาศนียบัตร (Certificate)",
+        "สิทธิ์ดูคลิปย้อนหลังการสอนในห้องเรียน",
+        "Skills อำนวยความสะดวกในการสร้างโปรเจค",
+        "Starter web app code template",
+        "หนังสือเรียน guidebook ฉบับรูปเล่ม",
+      ],
+      note: "จำกัดจำนวน 20 ที่นั่งเท่านั้น",
+    },
+    {
+      name: "Duo",
+      badge: "คุ้มค่าที่สุด",
+      was: "13,980 บาท",
+      price: "9,999",
+      code: "ECHO3981",
+      discount: "3,981 บาท",
+      features: [
+        "ผู้เรียน 2 ที่นั่ง (ตกท่านละไม่ถึง 5,000 บาท)",
+        "Workshop เต็มวัน (09:00 - 17:30 น.)",
+        "ใบประกาศนียบัตร (Certificate)",
+        "สิทธิ์ดูคลิปย้อนหลังการสอนในห้องเรียน",
+        "Skills อำนวยความสะดวกในการสร้างโปรเจค",
+        "Starter web app code template",
+        "หนังสือเรียน guidebook ฉบับรูปเล่ม",
+      ],
+      bonus: {
+        label: "แถมฟรี (มูลค่า 2,000 บาท)",
+        title: "Private Consult 60 นาที",
+        body: "เซสชันให้คำปรึกษาระดับผู้เชี่ยวชาญแบบส่วนตัว เจาะลึกประเด็นสำคัญในการนำ AI เข้าไปในองค์กร/ธุรกิจ ช่วยวิเคราะห์สถานการณ์ และให้แนวทางเชิงกลยุทธ์ที่นำไปใช้ได้ทันที เหมาะสำหรับผู้บริหาร ผู้ประกอบการ ที่ต้องการผลลัพธ์ที่แม่นยำ",
+      },
+      note: "ชุดละ 2 ที่นั่ง จำกัดจำนวน 5 ชุดเท่านั้น",
+    },
+  ] satisfies Plan[],
+  register: "ลงทะเบียน",
+
+  faqHeading: "รวมเรื่องต่าง ๆ ที่คุณอาจจะยังสงสัย",
+  // Draft answers — confirm with the team before launch.
+  faq: [
+    {
+      title: "ไม่เคยเขียนโค้ดเลย เรียนได้ไหม?",
+      body: "ได้แน่นอน คลาสนี้ออกแบบมาสำหรับคนที่ไม่มีพื้นฐาน AI จะเป็นคนเขียนโค้ด ส่วนคุณโฟกัสที่ไอเดียและธุรกิจของคุณ",
+    },
+    {
+      title: "ต้องเตรียมอะไรมาบ้าง?",
+      body: "โน้ตบุ๊ก 1 เครื่อง (Mac หรือ Windows) พร้อมที่ชาร์จ และไอเดียหรือปัญหาในธุรกิจที่อยากแก้ เราจะส่งรายละเอียดการติดตั้งให้ก่อนวันเรียน",
+    },
+    {
+      title: "ต้องเสียค่าเครื่องมือ AI เพิ่มหรือไม่?",
+      body: "ในคลาสใช้เครื่องมือที่มีแพ็กเกจฟรีได้ เราจะแนะนำว่าเมื่อไหร่ที่ควรอัปเกรด และค่าใช้จ่ายโดยประมาณหลังจบคลาส",
+    },
+    {
+      title: "ดูคลิปย้อนหลังได้นานแค่ไหน?",
+      body: "ผู้เรียนทุกคนได้สิทธิ์ดูคลิปย้อนหลังการสอนในห้องเรียน เพื่อกลับมาทบทวนได้ตลอด",
+    },
+    {
+      title: "ออกใบกำกับภาษีในนามบริษัทได้ไหม?",
+      body: "ได้ แจ้งข้อมูลบริษัทตอนลงทะเบียน แล้วเราจะออกใบเสร็จ/ใบกำกับภาษีให้",
+    },
+  ] satisfies AccordionItem[],
+
+  finalHeadline: [
+    "จองที่นั่งด้วยตัวเองได้เลย",
+    "หรือถ้ายังไม่แน่ใจ ทักมาคุยกันก่อนได้นะ :)",
+  ],
+  finalSub: "หวังว่าจะได้เจอกันในคลาสเรียนครับ",
+
+  footer: {
+    copyright: `© ${new Date().getFullYear()} Ecsight Group`,
+    links: [
+      { href: "/th", label: "Ecsight Group" },
+      { href: "/th/privacy-policy", label: "นโยบายความเป็นส่วนตัว" },
+    ],
+  },
+};
+
+// Black card with a warm mesh glow rising from the bottom-right corner
+// (see .banner-mesh below).
+const gradientCard = "banner-mesh text-white";
+const orangePill =
+  "inline-flex items-center justify-center cta-mesh rounded-full px-8 py-4 text-lg font-semibold text-black transition-[transform,box-shadow] duration-300 hover:scale-[1.03]";
+const whitePill =
+  "inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-lg font-semibold text-[#ff6a13] transition-transform duration-300 hover:scale-[1.03]";
+// Hero chip icon: black tile, 1px black outside stroke, orange inner glow.
+const iconGlow =
+  "flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-black text-white shadow-[0_0_0_1px_#000,inset_0_0_15px_rgb(254_105_19/0.8)]";
+const heading = "text-center text-3xl leading-snug md:text-5xl md:leading-tight";
+const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
+---
+
+<Layout
+  locale="th"
+  theme="light"
+  title="เรียนสร้างแอปด้วย AI ใน 1 วัน — Ecsight × Data Echooo"
+  description={content.subtitle}
+>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap"
+  />
+  <!-- Sticky navbar: full-width at the top, then (data-scrolled) it
+       tightens into a floating white pill. Slides away (data-hidden) while
+       the full-screen app panel is on screen. See the script below. -->
+  <header
+    data-nav
+    class="group/nav sticky top-0 z-50 px-2 transition-[transform,padding] duration-500 ease-out data-[hidden]:-translate-y-[120%] data-[scrolled]:pt-3 md:px-3"
+  >
+    <div
+      class="mx-auto flex max-w-[100%] items-center gap-6 rounded-full px-3 py-4 transition-[max-width,padding,background-color] duration-500 ease-out group-data-[scrolled]/nav:max-w-5xl group-data-[scrolled]/nav:bg-white group-data-[scrolled]/nav:py-2 group-data-[scrolled]/nav:pr-2 group-data-[scrolled]/nav:pl-6 group-data-[scrolled]/nav:ring-1 group-data-[scrolled]/nav:ring-black/5 md:px-4"
+    >
+      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-9 w-auto transition-[height] duration-500 group-data-[scrolled]/nav:h-7" />
+      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-8 w-auto transition-[height] duration-500 group-data-[scrolled]/nav:h-6" />
+      <!-- Section links (Lenis smooth-scrolls #anchors); desktop only. -->
+      <nav aria-label="เมนู" class="ml-auto hidden items-center gap-1 lg:flex">
+        {
+          content.nav.map((l) => (
+            <a
+              href={l.href}
+              class="rounded-full px-4 py-2 text-foreground/70 transition-colors hover:bg-neutral-100 hover:text-foreground"
+            >
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+      <a
+        href={REGISTER_URL}
+        class="ml-auto rounded-full bg-black px-5 py-2.5 font-semibold text-white transition-transform duration-300 hover:scale-[1.03] lg:ml-2"
+      >
+        {content.navCta}
+      </a>
+    </div>
+  </header>
+
+  <main class="flex flex-col gap-24 md:gap-40">
+    <!-- Hero -->
+    <section class="w-full px-2 md:px-3">
+      <div
+        class:list={[gradientCard, "relative overflow-hidden rounded-[2rem]"]}
+      >
+        <div class="grid items-end gap-8 lg:grid-cols-2">
+          <div class="px-6 pt-12 pb-4 md:px-12 md:pt-20 lg:pb-20">
+            <p class="text-[#ff7a2a] md:text-lg">{content.eyebrow}</p>
+            <h1 class="mt-3 text-4xl leading-tight md:text-6xl md:leading-[1.15]">
+              {
+                content.headline.map((line) => {
+                  const [before, after] = line.split(content.headlineHighlight);
+                  return (
+                    <span class="block lg:whitespace-nowrap">
+                      {after === undefined ? (
+                        line
+                      ) : (
+                        <>
+                          {before}
+                          <span class="relative inline-block whitespace-nowrap">
+                            {content.headlineHighlight}
+                            {[
+                              "M4 15 C 58 7, 118 6, 172 10 S 262 17, 296 8",
+                              "M22 20 C 84 13, 150 12, 210 15 S 270 18, 288 14",
+                            ].map((d, i) => (
+                              <svg
+                                aria-hidden="true"
+                                viewBox="0 0 300 24"
+                                preserveAspectRatio="none"
+                                class:list={[
+                                  "scribble pointer-events-none absolute -bottom-[0.28em] left-[-2%] h-[0.32em] w-[104%] overflow-visible",
+                                  i === 1 && "scribble-2",
+                                ]}
+                              >
+                                <path d={d} />
+                              </svg>
+                            ))}
+                          </span>
+                          {after}
+                        </>
+                      )}
+                    </span>
+                  );
+                })
+              }
+            </h1>
+            <p class="mt-5 max-w-xl leading-relaxed text-white/60 md:text-lg">
+              {content.subtitle}
+            </p>
+            <div class="mt-8 flex flex-wrap gap-2">
+              <div class="flex items-center gap-4 rounded-2xl bg-white/15 py-2.5 pr-5 pl-2.5">
+                <span class={iconGlow}>
+                  <CalendarIcon className="size-6 [filter:drop-shadow(0_0_4px_#fe6913)_drop-shadow(0_0_8px_#fe6913)]" />
+                </span>
+                <p class="text-sm leading-relaxed">
+                  {content.date[0]}<br />{content.date[1]}
+                </p>
+              </div>
+              <div class="flex items-center gap-4 rounded-2xl bg-white/15 py-2.5 pr-5 pl-2.5">
+                <span class={iconGlow}>
+                  <MapPointIcon className="size-6 [filter:drop-shadow(0_0_4px_#fe6913)_drop-shadow(0_0_8px_#fe6913)]" />
+                </span>
+                <p class="text-sm leading-relaxed">
+                  {content.venue[0]}<br />{content.venue[1]}
+                </p>
+              </div>
+            </div>
+            <a href={REGISTER_URL} class:list={[orangePill, "mt-10 w-full sm:w-auto sm:px-20"]}>
+              {content.cta}
+            </a>
+            <p class="mt-4 text-white/90">{content.promo}</p>
+          </div>
+          <HeroSpeakers client:load speakers={content.instructors} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Why simple -->
+    <section class={section}>
+      <h2 class={heading}>{content.whyHeading[0]}<br />{content.whyHeading[1]}</h2>
+      <div class="mt-12 grid gap-8 md:mt-14 md:grid-cols-3 md:gap-5">
+        {
+          content.why.map((c) => (
+            <article>
+              <div class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-black">
+                <WhyLoop client:visible variant={c.loop} />
+              </div>
+              <h3 class="mt-7 text-xl leading-snug">{c.title}</h3>
+              <p class="mt-2 text-foreground/50">{c.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Send expand: a pill that grows full-screen into the app preview. -->
+    <section class="w-full">
+      <SendExpand client:visible {...content.showcase} />
+    </section>
+
+    <!-- Perks bento -->
+    <section class={section}>
+      <h2 class={heading}>{content.perksHeading[0]}<br />{content.perksHeading[1]}</h2>
+      <div class="mt-12 grid gap-5 md:mt-14 md:grid-cols-5">
+        {
+          content.perks.map((c, i) => (
+            <article
+              class:list={[
+                "flex min-h-72 flex-col justify-end rounded-3xl bg-neutral-100 p-6 md:min-h-100",
+                // Rows alternate narrow/wide, wide/narrow, narrow/wide.
+                [0, 3, 4].includes(i) ? "md:col-span-2" : "md:col-span-3",
+              ]}
+            >
+              <h3 class="text-xl leading-snug">{c.title}</h3>
+              <p class="mt-2 max-w-md text-foreground/50">{c.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Agenda -->
+    <section id="agenda" data-anchor class:list={[section, "grid gap-10 md:grid-cols-2 md:gap-12"]}>
+      <!-- Heading + past-class photos stick together beside the agenda. -->
+      <div class="md:sticky md:top-10 md:self-start">
+        <h2 class="text-3xl leading-snug md:text-3xl md:leading-tight lg:text-4xl">
+          {content.agendaHeading.map((line) => <span class="block">{line}</span>)}
+        </h2>
+        <div class="mt-8">
+          <PhotoStack client:visible images={content.classPhotos} alt={content.classPhotosCaption} />
+        </div>
+      </div>
+      <Accordion client:visible items={content.agenda} variant="agenda" />
+    </section>
+
+    <!-- Mid CTA -->
+    <section class={section}>
+      <div
+        class:list={[
+          gradientCard,
+          "flex flex-col items-start justify-between gap-8 rounded-[2rem] px-6 py-12 md:flex-row md:items-center md:px-12 md:py-12",
+        ]}
+      >
+        <div>
+          <p class="text-[#ff7a2a]">{content.eyebrow}</p>
+          <p class="mt-3 text-2xl leading-snug md:text-4xl">
+            {content.bannerHeadline[0]}<br />{content.bannerHeadline[1]}
+          </p>
+        </div>
+        <a href={REGISTER_URL} class:list={[whitePill, "w-full md:w-auto md:px-12"]}>
+          {content.cta}
+        </a>
+      </div>
+    </section>
+
+    <!-- Instructors -->
+    <section id="instructors" data-anchor class={section}>
+      <h2 class={heading}>
+        {content.instructorsHeading[0]}<br />{content.instructorsHeading[1]}
+      </h2>
+      <InstructorStack client:visible instructors={content.instructors} />
+    </section>
+
+    <!-- Testimonials -->
+    <section id="reviews" data-anchor class="w-full">
+      <h2 class:list={[heading, "px-4"]}>
+        {content.testimonialsHeading[0]}<br />{content.testimonialsHeading[1]}
+      </h2>
+      <div class="mt-12 grid grid-cols-2 gap-3 px-4 sm:grid-cols-3 md:mt-14 md:gap-4 md:px-6 lg:grid-cols-6">
+        {
+          content.testimonials.map((t) => (
+            <div
+              data-testimonial={t.slug}
+              class="group relative aspect-[9/16] overflow-hidden rounded-2xl bg-neutral-900"
+            >
+              <!-- Animated cover: muted 3s loop of the clip's opening. H.264 on
+                   purpose: six covers play at once, and H.264 is hardware-
+                   decoded everywhere, whereas AV1 falls back to software on
+                   many devices and made scrolling stutter. -->
+              <video
+                data-preview
+                muted
+                loop
+                playsinline
+                aria-hidden="true"
+                poster={`/workshop/testimonials/${t.slug}.webp`}
+                class="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              >
+                <source src={`/workshop/testimonials/${t.slug}.preview.mp4`} type="video/mp4" />
+              </video>
+              <!-- Title + gradient fade out once a video is loaded. -->
+              <span class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/0 to-black/0 transition-opacity group-data-[state]:opacity-0" />
+              <span class="pointer-events-none absolute inset-x-4 bottom-4 text-left text-sm font-medium text-white transition-opacity group-data-[state]:opacity-0">
+                {t.title}
+              </span>
+              <!-- Whole tile toggles play/pause; the corner badge shows state. -->
+              <button
+                type="button"
+                data-toggle
+                aria-label={`เล่น/หยุดวิดีโอรีวิว ${t.title}`}
+                class="absolute inset-0 z-10 cursor-pointer"
+              >
+                <span class="absolute top-4 right-4 text-white transition-transform duration-300 group-hover:scale-110">
+                  <PlayIcon className="size-7 group-data-[state=playing]:hidden" />
+                  <PauseIcon className="hidden size-7 group-data-[state=playing]:block" />
+                </span>
+              </button>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" data-anchor class={section}>
+      <h2 class={heading}>{content.pricingHeading}</h2>
+      <div class="mt-12 grid items-start gap-5 md:mt-14 md:grid-cols-2">
+        {
+          content.plans.map((plan) => (
+            <article
+              class:list={[
+                "flex flex-col rounded-[2rem] p-6 md:p-10",
+                plan.featured ? [gradientCard, "banner-mesh-tall", "card-raised"] : "bg-neutral-100",
+              ]}
+            >
+              <div class="flex items-center gap-3">
+                <h3 class="text-3xl font-semibold">{plan.name}</h3>
+                <span class="rounded-full bg-[#ff6a13] px-3 py-1 text-sm font-medium text-white">
+                  {plan.badge}
+                </span>
+              </div>
+              <p class="mt-6 text-lg line-through opacity-60">{plan.was}</p>
+              <p class="mt-1 flex items-baseline gap-3">
+                <span class="text-6xl font-semibold">{plan.price}</span>
+                <span class="text-2xl opacity-70">บาท</span>
+              </p>
+              <p class="mt-4 text-sm opacity-70">
+                กรอกโค้ด <strong class="font-semibold opacity-100">{plan.code}</strong> รับส่วนลด {plan.discount}
+              </p>
+              <ul class="mt-10 flex flex-col gap-4">
+                {plan.features.map((f) => (
+                  <li class="flex items-start gap-3 text-lg">
+                    <CheckIcon className="mt-1 size-4 shrink-0 text-[#ff6a13]" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              {plan.bonus ? (
+                <div class="mt-10 flex gap-4 rounded-3xl bg-[#f3e6e0] p-5">
+                  <GiftIcon className="size-8 shrink-0 text-[#ff6a13]" />
+                  <div>
+                    <p class="text-sm font-medium text-[#ff6a13]">{plan.bonus.label}</p>
+                    <p class="mt-1 text-lg font-semibold">{plan.bonus.title}</p>
+                    <p class="mt-2 text-sm leading-relaxed text-foreground/70">{plan.bonus.body}</p>
+                  </div>
+                </div>
+              ) : null}
+              <a href={REGISTER_URL} class:list={[whitePill, "mt-10 w-full"]}>
+                {content.register}
+              </a>
+              <p class="mt-4 text-center text-sm opacity-80">{plan.note}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" data-anchor class={section}>
+      <h2 class={heading}>{content.faqHeading}</h2>
+      <div class="mx-auto mt-12 max-w-2xl md:mt-14">
+        <Accordion client:visible items={content.faq} variant="faq" />
+      </div>
+    </section>
+
+    <!-- Final CTA: widens from 80vw to a near-full-width rounded card as it
+         scrolls in. -->
+    <section class="w-full">
+      <ScrollExpandCard
+        client:visible
+        className={`${gradientCard} flex flex-col items-center px-6 pt-20 pb-40 text-center md:pt-28 md:pb-60`}
+      >
+        <h2 class="text-3xl leading-snug md:text-5xl md:leading-tight">
+          {content.finalHeadline[0]}<br />{content.finalHeadline[1]}
+        </h2>
+        <p class="mt-6 text-white/80 md:text-lg">{content.finalSub}</p>
+        <a href={REGISTER_URL} class:list={[orangePill, "mt-12 w-full sm:w-auto sm:px-20"]}>
+          {content.cta}
+        </a>
+      </ScrollExpandCard>
+    </section>
+  </main>
+
+  <footer
+    class="flex flex-col items-center gap-4 px-5 py-8 text-sm text-foreground/50 md:flex-row md:justify-between md:px-7"
+  >
+    <div class="flex items-center gap-4">
+      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-7 w-auto" />
+      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-6 w-auto" />
+      <span>{content.footer.copyright}</span>
+    </div>
+    <nav aria-label="ลิงก์ท้ายหน้า" class="flex items-center gap-6">
+      {
+        content.footer.links.map((l) => (
+          <a href={l.href} class="transition-colors hover:text-foreground">
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+  </footer>
+</Layout>
+
+<script>
+  // Navbar: pill once scrolled past the top; hidden while the send-expand
+  // stage (full-screen app panel) covers the middle of the viewport.
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  if (nav) {
+    const onScroll = () => nav.toggleAttribute("data-scrolled", window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const hideFor = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? hideFor.add(e.target) : hideFor.delete(e.target);
+        nav.toggleAttribute("data-hidden", hideFor.size > 0);
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    // The island hydrates late, so wait for its stage to appear.
+    const watch = () => {
+      const els = document.querySelectorAll("[data-hide-nav]");
+      els.forEach((el) => io.observe(el));
+      return els.length > 0;
+    };
+    if (!watch()) {
+      const mo = new MutationObserver(() => watch() && mo.disconnect());
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+</script>
+
+<script>
+  // Inline testimonial playback without native controls: the tile itself is
+  // the play/pause toggle and the corner badge shows state (via data-state on
+  // the tile). One video plays at a time.
+  const base = "/workshop/testimonials/";
+  let current: { tile: HTMLElement; video: HTMLVideoElement } | null = null;
+
+  // Preview loops: six videos painting at once made scrolling stutter, so
+  // they only play while the section is on screen AND the page isn't
+  // actively scrolling (resumed ~200ms after scroll stops). Reduced motion
+  // keeps them on the still poster.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const previews = [...document.querySelectorAll<HTMLVideoElement>("[data-preview]")];
+  previews.forEach((v) => {
+    v.removeAttribute("autoplay");
+    v.pause();
+  });
+  let inView = false;
+  let scrolling = false;
+  let scrollTimer: ReturnType<typeof setTimeout>;
+  const syncPreviews = () => {
+    const run = inView && !scrolling && !reduceMotion;
+    previews.forEach((v) => {
+      if (current?.tile.contains(v)) return; // its tile is playing the full clip
+      if (run) v.play().catch(() => {});
+      else v.pause();
+    });
+  };
+  const section = previews[0]?.closest("section");
+  if (section) {
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      syncPreviews();
+    }).observe(section);
+  }
+  addEventListener(
+    "scroll",
+    () => {
+      if (!scrolling) {
+        scrolling = true;
+        syncPreviews();
+      }
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        scrolling = false;
+        syncPreviews();
+      }, 200);
+    },
+    { passive: true },
+  );
+  const resumePreview = (tile: HTMLElement) => {
+    if (inView && !scrolling && !reduceMotion)
+      tile.querySelector<HTMLVideoElement>("[data-preview]")?.play().catch(() => {});
+  };
+
+  const stop = () => {
+    if (!current) return;
+    current.video.pause();
+    current.video.remove(); // also stops any further buffering
+    delete current.tile.dataset.state;
+    resumePreview(current.tile);
+    current = null;
+  };
+
+  const start = (tile: HTMLElement) => {
+    stop();
+    const slug = tile.dataset.testimonial;
+    const video = document.createElement("video");
+    video.playsInline = true;
+    video.poster = `${base}${slug}.webp`;
+    video.className = "pointer-events-none absolute inset-0 size-full object-cover";
+    // AV1 first (smallest); HEVC for Safari on devices without AV1.
+    video.innerHTML = `
+      <source src="${base}${slug}.av1.mp4" type='video/mp4; codecs="av01.0.04M.10"'>
+      <source src="${base}${slug}.hevc.mp4" type='video/mp4; codecs="hvc1"'>`;
+    video.addEventListener("play", () => (tile.dataset.state = "playing"));
+    video.addEventListener("pause", () => {
+      if (current?.video === video) tile.dataset.state = "paused";
+    });
+    video.addEventListener("ended", stop);
+    const preview = tile.querySelector<HTMLVideoElement>("[data-preview]")!;
+    preview.pause();
+    preview.after(video);
+    current = { tile, video };
+    video.play().catch(() => {});
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-testimonial]").forEach((tile) => {
+    tile.querySelector("[data-toggle]")!.addEventListener("click", () => {
+      if (current?.tile !== tile) start(tile);
+      else if (current.video.paused) current.video.play().catch(() => {});
+      else current.video.pause();
+    });
+  });
+</script>
+
+<style is:global>
+  /* Nav anchor targets land below the floating navbar pill. */
+  [data-anchor] {
+    scroll-margin-top: 7rem;
+  }
+
+  /* This page uses IBM Plex Sans Thai instead of the site's Outfit/Noto
+     stack. Unlayered, so it beats Tailwind's base (h1–h6) and font-sans
+     utility, which inline the font value. */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "IBM Plex Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Banner mesh: black card with blurred orange + cream shapes rising from
+     the bottom-right (design export in /public/workshop/banner-mesh.svg).
+     cover + bottom-right keeps the glow in the corner at any card size. */
+  .banner-mesh {
+    background: #000 url("/workshop/banner-mesh.svg") right bottom / cover no-repeat;
+  }
+
+  /* Tall cards: cover would blow the glow up to full height, so keep it at
+     roughly the design's landscape size, pinned bottom-right. This variant's
+     top fades to black so the image edge doesn't show as a seam. */
+  .banner-mesh-tall {
+    background-image: url("/workshop/banner-mesh-tall.svg");
+    background-size: 260% auto;
+  }
+
+  /* Raised edge for the highlighted pricing card: dark rim, light from the
+     top-left (bright top + left edges, shaded bottom-right), faint inner
+     outline. */
+  .card-raised {
+    box-shadow:
+      0 0 0 2px #000,
+      inset 1.5px 1.5px 0 rgb(255 255 255 / 0.5),
+      inset 0 0 0 1px rgb(255 255 255 / 0.15),
+      inset -1.5px -1.5px 4px rgb(0 0 0 / 0.35);
+  }
+
+  /* Animated mesh gradient for the orange CTAs: three warm blobs drift over
+     an orange base. @property makes the blob positions interpolable;
+     browsers without it just show the static mesh. */
+  @property --mx1 { syntax: "<percentage>"; inherits: false; initial-value: 15%; }
+  @property --my1 { syntax: "<percentage>"; inherits: false; initial-value: 20%; }
+  @property --mx2 { syntax: "<percentage>"; inherits: false; initial-value: 85%; }
+  @property --my2 { syntax: "<percentage>"; inherits: false; initial-value: 80%; }
+  @property --mx3 { syntax: "<percentage>"; inherits: false; initial-value: 50%; }
+  @property --my3 { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+
+  .cta-mesh {
+    background-color: #ff8433;
+    background-image:
+      radial-gradient(at var(--mx1) var(--my1), #ffc28c 0%, transparent 55%),
+      radial-gradient(at var(--mx2) var(--my2), #ff6a13 0%, transparent 55%),
+      radial-gradient(at var(--mx3) var(--my3), #ffe2bd 0%, transparent 45%);
+    animation: cta-mesh 7s ease-in-out infinite alternate;
+    /* Raised, skeuomorphic look: dark rim, bright top edge, shaded bottom,
+       soft drop shadow. */
+    position: relative;
+    isolation: isolate;
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.25);
+    box-shadow:
+      0 0 0 1.5px #3d1600,
+      inset 0 2px 0 rgb(255 255 255 / 0.6),
+      inset 0 -3px 6px rgb(150 50 0 / 0.3),
+      0 8px 18px -6px rgb(0 0 0 / 0.55),
+      0 2px 4px rgb(0 0 0 / 0.3);
+  }
+
+  /* Gloss: lighter top half fading into a slightly darker base. Sits above
+     the mesh but below the label. */
+  .cta-mesh::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.32),
+      rgb(255 255 255 / 0.08) 50%,
+      rgb(0 0 0 / 0.04)
+    );
+    pointer-events: none;
+  }
+
+  .cta-mesh:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow:
+      0 0 0 1.5px #3d1600,
+      inset 0 2px 0 rgb(255 255 255 / 0.45),
+      inset 0 -2px 4px rgb(110 30 0 / 0.4),
+      0 3px 8px -4px rgb(0 0 0 / 0.5);
+  }
+
+  @keyframes cta-mesh {
+    33% {
+      --mx1: 70%; --my1: 90%;
+      --mx2: 20%; --my2: 10%;
+      --mx3: 90%; --my3: 50%;
+    }
+    66% {
+      --mx1: 40%; --my1: 0%;
+      --mx2: 60%; --my2: 100%;
+      --mx3: 10%; --my3: 70%;
+    }
+    100% {
+      --mx1: 90%; --my1: 30%;
+      --mx2: 10%; --my2: 60%;
+      --mx3: 50%; --my3: 100%;
+    }
+  }
+
+  /* Hand-drawn underline under the hero highlight: two rough strokes
+     revealed left → right, held, faded, and redrawn on a 3s loop. A clip-path
+     wipe is used instead of a stroke-dash draw because the SVG is stretched
+     (non-scaling stroke), which breaks pathLength-based dashes. Both strokes
+     share one 3s cycle so they stay in sync. */
+  .scribble {
+    clip-path: inset(-50% 100% -50% 0);
+    animation: scribble-1 3s cubic-bezier(0.65, 0, 0.35, 1) 0.6s infinite both;
+  }
+  .scribble path {
+    fill: none;
+    stroke: #ff6a13;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .scribble-2 {
+    animation-name: scribble-2;
+  }
+  .scribble-2 path {
+    stroke-width: 3.5;
+    opacity: 0.85;
+  }
+  @keyframes scribble-1 {
+    0% { clip-path: inset(-50% 100% -50% 0); opacity: 1; }
+    30%, 82% { clip-path: inset(-50% -2% -50% -2%); opacity: 1; }
+    94% { clip-path: inset(-50% -2% -50% -2%); opacity: 0; }
+    100% { clip-path: inset(-50% 100% -50% 0); opacity: 0; }
+  }
+  @keyframes scribble-2 {
+    0%, 22% { clip-path: inset(-50% 100% -50% 0); opacity: 1; }
+    46%, 82% { clip-path: inset(-50% -2% -50% -2%); opacity: 1; }
+    94% { clip-path: inset(-50% -2% -50% -2%); opacity: 0; }
+    100% { clip-path: inset(-50% 100% -50% 0); opacity: 0; }
+  }
+
+  /* Orbit ring in the "why simple" cards (why-loops.tsx). */
+  @keyframes orbit-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scribble { animation: none; clip-path: none; }
+    .cta-mesh { animation: none; }
+  }
+</style>

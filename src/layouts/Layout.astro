@@ -7,17 +7,20 @@ interface Props {
   locale: Locale;
   title?: string;
   description?: string;
+  /** Pages default to the dark theme; standalone funnels can opt into light. */
+  theme?: "dark" | "light";
 }
 
 const {
   locale,
   title = "Ecsight Group",
   description = "Ecsight Group is a digital agency building bold brands, products, and experiences for ambitious teams.",
+  theme = "dark",
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={locale} class="dark h-full antialiased">
+<html lang={locale} class:list={[theme === "dark" && "dark", "h-full antialiased"]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,6 +33,7 @@ const {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=Noto+Sans+Thai:wght@300..700&family=Geist+Mono:wght@400..600&display=swap"
     />
+    <slot name="head" />
   </head>
   <body class="min-h-full bg-background font-sans text-foreground">
     <slot />

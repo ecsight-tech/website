@@ -44,6 +44,8 @@ const content = {
     { href: "#faq", label: "คำถามที่พบบ่อย" },
   ],
   navCta: "จองที่นั่ง",
+  // Highlight line above the price in the mobile CTA bar.
+  barEyebrow: "รุ่นที่ 1 เปิดรับสมัครแล้ว",
 
   eyebrow: "รุ่นที่ 1 กำลังเปิดรับสมัคร",
   headline: ["เรียนสร้างแอปด้วย AI", "ทำเป็นใน 1 วัน ไม่ต้องมีพื้นฐาน"],
@@ -543,7 +545,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     <!-- Agenda -->
     <section id="agenda" data-anchor class:list={[section, "grid gap-10 md:grid-cols-2 md:gap-12"]}>
       <!-- Heading + past-class photos stick together beside the agenda. -->
-      <div class="md:sticky md:top-10 md:self-start">
+      <div class="md:sticky md:top-28 md:self-start">
         <h2 class="text-3xl leading-snug md:text-3xl md:leading-tight lg:text-4xl">
           {content.agendaHeading.map((line) => <span class="block">{line}</span>)}
         </h2>
@@ -745,12 +747,10 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
   >
     <div class="flex items-center gap-3">
       <div class="min-w-0 flex-1 leading-tight">
-        <p class="flex items-baseline gap-2">
+        <p class="truncate text-sm text-[#ff6a13]">{content.barEyebrow}</p>
+        <p class="mt-0.5 flex items-baseline gap-2">
           <span class="text-xl font-semibold">{barPlan.price} บาท</span>
           <span class="truncate text-sm text-foreground/40 line-through">{barPlan.was}</span>
-        </p>
-        <p class="mt-0.5 truncate text-sm text-[#ff6a13]">
-          ลด {barPlan.discount} · โค้ด {barPlan.code}
         </p>
       </div>
       <a href={REGISTER_URL} class:list={[orangePill, "shrink-0 px-6 py-3 text-base"]}>

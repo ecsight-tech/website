@@ -9,6 +9,8 @@ import { InstructorStack } from "@/components/workshop/instructor-stack";
 import { HeroSpeakers } from "@/components/workshop/hero-speakers";
 import { ScrollExpandCard } from "@/components/workshop/scroll-expand-card";
 import { WhyLoop, type WhyLoopVariant } from "@/components/workshop/why-loops";
+import { PerkLoop, type PerkLoopVariant } from "@/components/workshop/perk-loops";
+import { Countdown } from "@/components/workshop/countdown";
 import { PhotoStack } from "@/components/workshop/photo-stack";
 import ClassBackdrop from "@/components/workshop/ClassBackdrop.astro";
 import { SendExpand, type SendExpandContent } from "@/components/workshop/send-expand";
@@ -45,7 +47,7 @@ const content = {
   ],
   navCta: "จองที่นั่ง",
   // Highlight line above the price in the mobile CTA bar.
-  barEyebrow: "รุ่นที่ 1 เปิดรับสมัครแล้ว",
+  barEyebrow: "รุ่นที่ 1 กำลังเปิดรับสมัคร",
 
   eyebrow: "รุ่นที่ 1 กำลังเปิดรับสมัคร",
   headline: ["เรียนสร้างแอปด้วย AI", "ทำเป็นใน 1 วัน ไม่ต้องมีพื้นฐาน"],
@@ -57,6 +59,8 @@ const content = {
   venue: ["KX Building", "BTS วงเวียนใหญ่ (มีที่จอดรถ)"],
   cta: "จองที่นั่งเลย (จำกัด 20 ท่าน)",
   promo: "กรอกโค้ด XXXX เหลือ 4,990 บาท จาก 6,990 บาท",
+  // Countdown strip above the navbar: to the class start (matches `date`).
+  countdown: { label: "รุ่นที่ 1 เริ่มคลาสในอีก", target: "2026-10-31T09:00:00+07:00" },
 
   whyHeading: ["เรื่องโค้ดมันซับซ้อน", "เราเลยคิดมาให้ เพื่อให้คุณเข้าใจง่าย ๆ"],
   why: [
@@ -84,29 +88,35 @@ const content = {
   perks: [
     {
       title: "ตัวช่วยต่าง ๆ ให้คุณ ลงมือทำได้ง่ายที่สุด",
+      anim: "kit",
       body: "Template code, Skills, Guide book เราเตรียมไว้ให้คุณพร้อมทั้งหมด",
     },
     {
       title: "สงสัยตรงไหน มีทีมพร้อมช่วยเหลือทันที",
+      anim: "help",
       body: "ขณะลงมือทำในห้องเรียน คุณขอความช่วยเหลือได้ตลอด",
     },
     {
       title: "โอกาส connect คนทำธุรกิจในสายงานอื่น ๆ",
+      anim: "network",
       body: "ปกติผู้เรียนของเรา เป็นคนทำธุรกิจใน หลากหลายอาชีพ และหลากหลายช่วงอายุ",
     },
     {
       title: "Private community หลังคลาสเรียน",
-      body: "อัพเดตข่าวสาร และเทคนิค และ use case ต่าง ๆ เกี่ยวกับ AI",
-    },
+      anim: "community",
+      body: "LINE Openchat พิเศษ สำหรับอัพเดตข่าวสาร และเทคนิค และ use case ต่าง ๆ เกี่ยวกับ AI",
+    }, 
     {
-      title: "วิดีโอย้อนหลัง ให้คุณอยากทบทวนได้ตลอด",
+      title: "วิดีโอย้อนหลัง ให้คุณทบทวนได้ตลอด",
+      anim: "replay",
       body: "พลาดตรงไหนไปในคลาสสด ก็กลับมาเรียนซ้ำได้ตลอด",
     },
     {
-      title: "ส่วนลดพิเศษ เมื่อกลับมาเรียนคลาส ถัดไปกับเราอีก",
+      title: "ส่วนลดพิเศษ เมื่อกลับมาเรียนในรุ่นถัดไปกับเราอีก",
+      anim: "discount",
       body: "เช่น จากราคา 4,990 บาท → 1590 บาท เพราะเราถือว่าคุณมาเรียนเพื่อทบทวน",
     },
-  ] satisfies Card[],
+  ] satisfies (Card & { anim: PerkLoopVariant })[],
 
   agendaHeading: ["สิ่งที่คุณจะได้เรียนรู้", "จากการลงมือทำจริงภายใน 1 วัน"],
   // Past workshop photos under the agenda heading, shown as a cycling stack.
@@ -164,7 +174,7 @@ const content = {
       title: "Build Your App Blueprint + Workshop #2",
       body: "เปลี่ยนไอเดียและ MVP ให้กลายเป็น Requirement และแผนการสร้างแอปที่ชัดเจน เพื่อให้ AI เข้าใจเป้าหมาย ขอบเขต และกฎของโปรเจกต์ตรงกับผู้เรียน",
     },
-    { title: "Lunch Break", icon: "lunch", divider: true },
+    { title: "Lunch Break", divider: true },
     {
       icon: "code",
       label: "13.00 - 13.40",
@@ -197,7 +207,10 @@ const content = {
     },
   ] satisfies AccordionItem[],
 
-  bannerHeadline: ["เรียนสร้างแอปด้วย AI", "ทำเป็นใน 1 วัน ไม่ต้องมีพื้นฐาน"],
+  // Mid CTA, right after the agenda: its own copy, not a repeat of the hero.
+  bannerEyebrow: "ที่นั่งมีจำกัดเพียง 20 ท่าน",
+  bannerHeadline: ["เช้าเริ่มจากไอเดีย กับคอมพิวเตอร์", "เย็นกลับบ้านพร้อมแอปพร้อมใช้งาน"],
+  bannerCta: "จองที่นั่งของคุณ",
 
   instructorsHeading: [
     "เรียนกับคนที่ทำงานสายเทคตัวจริง",
@@ -235,6 +248,18 @@ const content = {
   ],
 
   pricingHeading: "ราคา Workshop รุ่นที่ 1",
+  // Offer popup shown once after scrolling past pricing without booking.
+  offer: {
+    eyebrow: "ก่อนไปต่อ",
+    headline: "รับส่วนลดนี้ไว้ก่อนนะ",
+    body: "กรอกโค้ดนี้ตอนสมัคร",
+    copy: "คัดลอก",
+    copied: "คัดลอกแล้ว",
+    seats: "ที่นั่งจำกัดเพียง 20 ท่าน",
+    cta: "ใช้โค้ดแล้วจองที่นั่ง",
+    dismiss: "ไว้ทีหลัง",
+    close: "ปิด",
+  },
   plans: [
     {
       name: "Solo",
@@ -343,26 +368,34 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
   theme="light"
   title="เรียนสร้างแอปด้วย AI ใน 1 วัน — Ecsight × Data Echooo"
   description={content.subtitle}
+  image="/workshop/og-build-apps-with-ai.jpg"
 >
   <link
     slot="head"
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap"
   />
-  <!-- Sticky navbar. Mobile: a plain white bar with a hamburger menu (the CTA
-       lives in the fixed bottom bar instead). Desktop: full-width at the top,
-       then (data-scrolled) it tightens into a floating white pill. Both slide
+  <!-- Arms the entrance animations before first paint (no flash of content
+       that then hides); without JS, nothing is ever hidden. -->
+  <script is:inline slot="head">
+    document.documentElement.classList.add("reveal-ready");
+  </script>
+  <!-- Countdown strip: sits above the navbar and scrolls away with the page
+       (deliberately outside the sticky header). -->
+  <Countdown client:load {...content.countdown} />
+  <!-- Sticky navbar: a full-width white bar. Mobile swaps the links for a
+       hamburger menu (the CTA lives in the fixed bottom bar instead). Slides
        away (data-hidden) while the full-screen app panel is on screen. See
        the script below. -->
   <header
     data-nav
-    class="group/nav sticky top-0 z-50 transition-[transform,padding] duration-500 ease-out data-[hidden]:-translate-y-[120%] lg:px-3 lg:data-[scrolled]:pt-3"
+    class="group/nav sticky top-0 z-50 transition-transform duration-500 ease-out data-[hidden]:-translate-y-[120%]"
   >
     <div
-      class="relative mx-auto flex max-w-[100%] items-center gap-6 border-b border-black/5 bg-white px-5 py-3 transition-[max-width,padding,background-color] duration-500 ease-out lg:rounded-full lg:border-0 lg:bg-transparent lg:px-4 lg:py-4 lg:group-data-[scrolled]/nav:max-w-5xl lg:group-data-[scrolled]/nav:bg-white lg:group-data-[scrolled]/nav:py-2 lg:group-data-[scrolled]/nav:pr-2 lg:group-data-[scrolled]/nav:pl-6 lg:group-data-[scrolled]/nav:ring-1 lg:group-data-[scrolled]/nav:ring-black/5"
+      class="relative flex items-center gap-6 border-b border-black/5 bg-white px-5 py-3 lg:px-7 lg:py-4"
     >
-      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-7 w-auto transition-[height] duration-500 lg:h-9 lg:group-data-[scrolled]/nav:h-7" />
-      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-6 w-auto transition-[height] duration-500 lg:h-8 lg:group-data-[scrolled]/nav:h-6" />
+      <img src="/ecsight-logo-bl.svg" alt="Ecsight" class="h-7 w-auto lg:h-9" />
+      <img src="/dataechooo-logo-bl.svg" alt="Data Echooo" class="h-6 w-auto lg:h-8" />
       <!-- Section links (Lenis smooth-scrolls #anchors); desktop only. -->
       <nav aria-label="เมนู" class="ml-auto hidden items-center gap-1 lg:flex">
         {
@@ -416,7 +449,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
   <main class="flex flex-col gap-24 md:gap-40">
     <!-- Hero -->
-    <section class="w-full px-2 md:px-3">
+    <section data-hero class="w-full px-2 md:px-3">
       <div
         class:list={[gradientCard, "relative isolate overflow-hidden rounded-[2rem]"]}
       >
@@ -428,8 +461,8 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
         />
         <div class="grid items-end gap-8 lg:grid-cols-2">
           <div class="px-6 pt-12 pb-4 md:px-12 md:pt-20 lg:pb-20">
-            <p class="text-[#ff7a2a] md:text-lg">{content.eyebrow}</p>
-            <h1 class="mt-3 text-4xl leading-tight md:text-6xl md:leading-[1.15]">
+            <p data-reveal style="--reveal-i: 0" class="text-[#ff7a2a] md:text-lg">{content.eyebrow}</p>
+            <h1 data-reveal style="--reveal-i: 1" class="mt-3 text-4xl leading-tight md:text-6xl md:leading-[1.15]">
               {
                 content.headline.map((line) => {
                   const [before, after] = line.split(content.headlineHighlight);
@@ -467,10 +500,10 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
                 })
               }
             </h1>
-            <p class="mt-5 max-w-xl leading-relaxed text-white/60 md:text-lg">
+            <p data-reveal style="--reveal-i: 2" class="mt-5 max-w-xl leading-relaxed text-white/60 md:text-lg">
               {content.subtitle}
             </p>
-            <div class="mt-8 flex flex-wrap gap-2">
+            <div data-reveal style="--reveal-i: 3" class="mt-8 flex flex-wrap gap-2">
               <div class="flex items-center gap-4 rounded-2xl bg-white/15 py-2.5 pr-5 pl-2.5">
                 <span class={iconGlow}>
                   <CalendarIcon className="size-6 [filter:drop-shadow(0_0_4px_#fe6913)_drop-shadow(0_0_8px_#fe6913)]" />
@@ -488,23 +521,30 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
                 </p>
               </div>
             </div>
-            <a href={REGISTER_URL} class:list={[orangePill, "mt-10 w-full sm:w-auto sm:px-20"]}>
-              {content.cta}
-            </a>
-            <p class="mt-4 text-white/90">{content.promo}</p>
+            <!-- Reveal on a wrapper: on the button itself it would replace the
+                 cta-mesh animation. -->
+            <div data-reveal style="--reveal-i: 4" class="mt-10">
+              <a href={REGISTER_URL} class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
+                {content.cta}
+              </a>
+            </div>
+            <p data-reveal style="--reveal-i: 5" class="mt-4 text-white/90">{content.promo}</p>
+
           </div>
-          <HeroSpeakers client:load speakers={content.instructors} />
+          <div data-reveal style="--reveal-i: 3" class="self-end">
+            <HeroSpeakers client:load speakers={content.instructors} />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Why simple -->
     <section class={section}>
-      <h2 class={heading}>{content.whyHeading[0]}<br />{content.whyHeading[1]}</h2>
+      <h2 data-reveal class={heading}>{content.whyHeading[0]}<br />{content.whyHeading[1]}</h2>
       <div class="mt-12 grid gap-8 md:mt-14 md:grid-cols-3 md:gap-5">
         {
-          content.why.map((c) => (
-            <article>
+          content.why.map((c, i) => (
+            <article data-reveal style={`--reveal-i: ${i}`}>
               <div class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-black">
                 <WhyLoop client:visible variant={c.loop} />
               </div>
@@ -523,19 +563,25 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
     <!-- Perks bento -->
     <section class={section}>
-      <h2 class={heading}>{content.perksHeading[0]}<br />{content.perksHeading[1]}</h2>
+      <h2 data-reveal class={heading}>{content.perksHeading[0]}<br />{content.perksHeading[1]}</h2>
       <div class="mt-12 grid gap-5 md:mt-14 md:grid-cols-5">
         {
           content.perks.map((c, i) => (
             <article
+              data-reveal
+              style={`--reveal-i: ${i % 2}`}
               class:list={[
-                "flex min-h-72 flex-col justify-end rounded-3xl bg-neutral-100 p-6 md:min-h-100",
+                "flex min-h-72 flex-col justify-end overflow-hidden rounded-3xl bg-neutral-100 p-3 pb-6 md:min-h-100",
                 // Rows alternate narrow/wide, wide/narrow, narrow/wide.
                 [0, 3, 4].includes(i) ? "md:col-span-2" : "md:col-span-3",
               ]}
             >
-              <h3 class="text-xl leading-snug">{c.title}</h3>
-              <p class="mt-2 max-w-md text-foreground/50">{c.body}</p>
+              <!-- Illustration fills the space above the text, on the card's grey. -->
+              <div class="relative mb-6 h-60 overflow-hidden rounded-2xl md:h-auto md:flex-1">
+                <PerkLoop client:visible variant={c.anim} />
+              </div>
+              <h3 class="px-3 text-xl leading-snug">{c.title}</h3>
+              <p class="mt-2 max-w-md px-3 text-foreground/50">{c.body}</p>
             </article>
           ))
         }
@@ -545,7 +591,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     <!-- Agenda -->
     <section id="agenda" data-anchor class:list={[section, "grid gap-10 md:grid-cols-2 md:gap-12"]}>
       <!-- Heading + past-class photos stick together beside the agenda. -->
-      <div class="md:sticky md:top-28 md:self-start">
+      <div data-reveal class="md:sticky md:top-28 md:self-start">
         <h2 class="text-3xl leading-snug md:text-3xl md:leading-tight lg:text-4xl">
           {content.agendaHeading.map((line) => <span class="block">{line}</span>)}
         </h2>
@@ -553,12 +599,15 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
           <PhotoStack client:visible images={content.classPhotos} alt={content.classPhotosCaption} />
         </div>
       </div>
-      <Accordion client:visible items={content.agenda} variant="agenda" />
+      <div data-reveal style="--reveal-i: 1">
+        <Accordion client:visible items={content.agenda} variant="agenda" />
+      </div>
     </section>
 
     <!-- Mid CTA -->
     <section class={section}>
       <div
+        data-reveal
         class:list={[
           gradientCard,
           "relative isolate flex flex-col items-start justify-between gap-8 overflow-hidden rounded-[2rem] px-6 py-12 md:flex-row md:items-center md:px-12 md:py-12",
@@ -569,20 +618,20 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
           class="[mask-image:linear-gradient(to_right,transparent_10%,black_65%)]"
         />
         <div>
-          <p class="text-[#ff7a2a]">{content.eyebrow}</p>
+          <p class="text-[#ff7a2a]">{content.bannerEyebrow}</p>
           <p class="mt-3 text-2xl leading-snug md:text-4xl">
             {content.bannerHeadline[0]}<br />{content.bannerHeadline[1]}
           </p>
         </div>
         <a href={REGISTER_URL} class:list={[whitePill, "w-full md:w-auto md:px-12"]}>
-          {content.cta}
+          {content.bannerCta}
         </a>
       </div>
     </section>
 
     <!-- Instructors -->
     <section id="instructors" data-anchor class={section}>
-      <h2 class={heading}>
+      <h2 data-reveal class={heading}>
         {content.instructorsHeading[0]}<br />{content.instructorsHeading[1]}
       </h2>
       <InstructorStack client:visible instructors={content.instructors} />
@@ -590,13 +639,15 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
     <!-- Testimonials -->
     <section id="reviews" data-anchor class="w-full">
-      <h2 class:list={[heading, "px-4"]}>
+      <h2 data-reveal class:list={[heading, "px-4"]}>
         {content.testimonialsHeading[0]}<br />{content.testimonialsHeading[1]}
       </h2>
       <div class="mt-12 grid grid-cols-2 gap-3 px-4 sm:grid-cols-3 md:mt-14 md:gap-4 md:px-6 lg:grid-cols-6">
         {
-          content.testimonials.map((t) => (
+          content.testimonials.map((t, i) => (
             <div
+              data-reveal
+              style={`--reveal-i: ${i}`}
               data-testimonial={t.slug}
               class="group relative aspect-[9/16] overflow-hidden rounded-2xl bg-neutral-900"
             >
@@ -640,11 +691,13 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
     <!-- Pricing -->
     <section id="pricing" data-anchor class={section}>
-      <h2 class={heading}>{content.pricingHeading}</h2>
+      <h2 data-reveal class={heading}>{content.pricingHeading}</h2>
       <div class="mt-12 grid items-start gap-5 md:mt-14 md:grid-cols-2">
         {
-          content.plans.map((plan) => (
+          content.plans.map((plan, i) => (
             <article
+              data-reveal
+              style={`--reveal-i: ${i}`}
               class:list={[
                 "flex flex-col rounded-[2rem] p-6 md:p-10",
                 plan.featured ? [gradientCard, "banner-mesh-tall", "card-raised"] : "bg-neutral-100",
@@ -694,8 +747,8 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 
     <!-- FAQ -->
     <section id="faq" data-anchor class={section}>
-      <h2 class={heading}>{content.faqHeading}</h2>
-      <div class="mx-auto mt-12 max-w-2xl md:mt-14">
+      <h2 data-reveal class={heading}>{content.faqHeading}</h2>
+      <div data-reveal style="--reveal-i: 1" class="mx-auto mt-12 max-w-2xl md:mt-14">
         <Accordion client:visible items={content.faq} variant="faq" />
       </div>
     </section>
@@ -708,13 +761,15 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
         className={`${gradientCard} relative isolate flex flex-col items-center px-6 pt-20 pb-40 text-center md:pt-28 md:pb-60`}
       >
         <ClassBackdrop photos={content.classPhotos} />
-        <h2 class="text-3xl leading-snug md:text-5xl md:leading-tight">
+        <h2 data-reveal style="--reveal-i: 0" class="text-3xl leading-snug md:text-5xl md:leading-tight">
           {content.finalHeadline[0]}<br />{content.finalHeadline[1]}
         </h2>
-        <p class="mt-6 text-white/80 md:text-lg">{content.finalSub}</p>
-        <a href={REGISTER_URL} class:list={[orangePill, "mt-12 w-full sm:w-auto sm:px-20"]}>
-          {content.cta}
-        </a>
+        <p data-reveal style="--reveal-i: 1" class="mt-6 text-white/80 md:text-lg">{content.finalSub}</p>
+        <div data-reveal style="--reveal-i: 2" class="mt-12 w-full sm:w-auto">
+          <a href={REGISTER_URL} class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
+            {content.cta}
+          </a>
+        </div>
       </ScrollExpandCard>
     </section>
   </main>
@@ -738,11 +793,86 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     </nav>
   </footer>
 
+  <!-- Offer popup: opens once per session when the reader scrolls past the
+       pricing section without having clicked a booking button (see the
+       script below). Native <dialog>: Esc closes and focus stays inside.
+       Two panels: class photos on the left (a banner on top on mobile),
+       the offer on the right. -->
+  <dialog
+    data-offer
+    aria-labelledby="offer-title"
+    class="offer m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-4xl overflow-hidden rounded-[2rem] bg-transparent p-0 text-white"
+  >
+    <div class="grid md:grid-cols-2">
+      <!-- Class photos, cross-fading every 3s (same cycle as the hero). -->
+      <div aria-hidden="true" class="relative h-44 overflow-hidden bg-black md:h-auto">
+        {
+          content.classPhotos.map((src, i) => (
+            <img
+              src={src}
+              alt=""
+              loading="lazy"
+              class="class-backdrop absolute inset-0 size-full object-cover"
+              style={`--i: ${i}; --n: ${content.classPhotos.length}`}
+            />
+          ))
+        }
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent md:bg-gradient-to-r md:from-transparent md:to-black/30"></div>
+      </div>
+
+      <div class:list={[gradientCard, "relative flex flex-col justify-center px-6 pt-8 pb-5 md:px-10 md:pt-14 md:pb-8"]}>
+        <form method="dialog">
+          <button
+            aria-label={content.offer.close}
+            class="absolute top-4 right-4 flex size-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20"
+          >
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </form>
+
+        <p class="text-[#ff7a2a]">{content.offer.eyebrow}</p>
+        <h2 id="offer-title" class="mt-2 text-3xl leading-snug md:text-4xl">{content.offer.headline}</h2>
+
+        <p class="mt-6 text-sm text-white/60 md:mt-8">{content.offer.body}</p>
+        <div class="mt-2 flex items-center gap-2 rounded-2xl bg-white/10 p-2 pl-5 ring-1 ring-white/15 ring-inset">
+          <span class="flex-1 font-mono text-xl font-semibold tracking-wider md:text-2xl">{barPlan.code}</span>
+          <button
+            type="button"
+            data-offer-copy
+            data-code={barPlan.code}
+            data-copied={content.offer.copied}
+            class="cursor-pointer rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition-transform active:scale-95"
+          >
+            {content.offer.copy}
+          </button>
+        </div>
+
+        <p class="mt-5 flex items-baseline gap-2 md:mt-6">
+          <span class="text-4xl font-semibold md:text-5xl">{barPlan.price}</span>
+          <span class="text-white/60">บาท</span>
+          <span class="text-white/40 line-through">{barPlan.was}</span>
+        </p>
+        <p class="mt-1 text-sm text-[#ff9a55]">ลด {barPlan.discount} · {content.offer.seats}</p>
+
+        <a href={REGISTER_URL} class:list={[orangePill, "mt-8 w-full"]}>{content.offer.cta}</a>
+        <form method="dialog" class="mt-2">
+          <button class="w-full cursor-pointer py-3 text-sm text-white/50 transition-colors hover:text-white/80">
+            {content.offer.dismiss}
+          </button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Mobile CTA bar, fixed to the bottom of the screen: featured plan's price
        and discount + CTA (the footer's bottom padding keeps it from covering
-       the links). Hides with the navbar. -->
+       the links). Starts hidden and slides in once the hero is scrolled
+       past; also hides with the navbar. -->
   <div
     data-cta-bar
+    data-hidden
     class="fixed inset-x-0 bottom-0 z-40 border-t border-black/5 bg-white/90 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md transition-transform duration-500 ease-out data-[hidden]:translate-y-full lg:hidden"
   >
     <div class="flex items-center gap-3">
@@ -761,8 +891,24 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
 </Layout>
 
 <script>
-  // Navbar: pill once scrolled past the top (desktop); navbar and the mobile
-  // CTA bar hide while the send-expand stage (full-screen app panel) covers
+  // Entrance animations: [data-reveal] elements fade up as they scroll into
+  // view (staggered by --reveal-i). Anything already scrolled past on load
+  // shows immediately rather than waiting for the user to scroll back up.
+  const reveal = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting && e.boundingClientRect.top > 0) continue;
+        e.target.classList.add("is-revealed");
+        reveal.unobserve(e.target);
+      }
+    },
+    { rootMargin: "0px 0px -8% 0px" },
+  );
+  document.querySelectorAll("[data-reveal]").forEach((el) => reveal.observe(el));
+</script>
+
+<script>
+  // Navbar and the mobile CTA bar hide while the send-expand stage (full-screen app panel) covers
   // the middle of the viewport.
   const nav = document.querySelector<HTMLElement>("[data-nav]");
   const ctaBar = document.querySelector<HTMLElement>("[data-cta-bar]");
@@ -777,17 +923,28 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
   document.querySelectorAll("#mobile-menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
 
   if (nav) {
-    const onScroll = () => nav.toggleAttribute("data-scrolled", window.scrollY > 40);
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const hideFor = new Set<Element>();
+    // The CTA bar waits until the hero (and its own CTA) is off screen.
+    let pastHero = false;
+    const updateCtaBar = () => ctaBar?.toggleAttribute("data-hidden", !pastHero || hideFor.size > 0);
+
+    const onScroll = () => {
+      const past = !hero || hero.getBoundingClientRect().bottom <= 0;
+      if (past !== pastHero) {
+        pastHero = past;
+        updateCtaBar();
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const hideFor = new Set<Element>();
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) e.isIntersecting ? hideFor.add(e.target) : hideFor.delete(e.target);
         const hidden = hideFor.size > 0;
         nav.toggleAttribute("data-hidden", hidden);
-        ctaBar?.toggleAttribute("data-hidden", hidden);
+        updateCtaBar();
         if (hidden) setMenu(false);
       },
       { rootMargin: "-50% 0px -50% 0px" },
@@ -803,6 +960,61 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
       mo.observe(document.body, { childList: true, subtree: true });
     }
   }
+</script>
+
+<script>
+  // Offer popup: once the reader has seen pricing and scrolls past its bottom
+  // edge, open the offer — at most once per session, and never for someone
+  // who has already clicked a booking button.
+  const offer = document.querySelector<HTMLDialogElement>("[data-offer]");
+  const pricing = document.querySelector<HTMLElement>("#pricing");
+  const KEY = "offer-shown";
+  const done = () => {
+    try {
+      return sessionStorage.getItem(KEY) === "1";
+    } catch {
+      return false;
+    }
+  };
+  const markDone = () => {
+    try {
+      sessionStorage.setItem(KEY, "1");
+    } catch {}
+  };
+
+  // Clicking any booking link (the register URL) means no popup is needed.
+  const registerHref = offer?.querySelector<HTMLAnchorElement>("a")?.getAttribute("href");
+  document.querySelectorAll<HTMLAnchorElement>("a").forEach((a) => {
+    if (a.getAttribute("href") === registerHref && !offer?.contains(a)) a.addEventListener("click", markDone);
+  });
+
+  if (offer && pricing && !done() && typeof offer.showModal === "function") {
+    let seen = false;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) seen = true;
+      else if (seen && e.boundingClientRect.bottom < 0 && !done()) {
+        markDone();
+        io.disconnect();
+        offer.showModal();
+      }
+    });
+    io.observe(pricing);
+  }
+
+  // Click on the backdrop (outside the card) closes it.
+  offer?.addEventListener("click", (e) => {
+    if (e.target === offer) offer.close();
+  });
+
+  offer?.querySelector<HTMLButtonElement>("[data-offer-copy]")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const label = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(btn.dataset.code ?? "");
+      btn.textContent = btn.dataset.copied ?? label;
+      setTimeout(() => (btn.textContent = label), 1600);
+    } catch {}
+  });
 </script>
 
 <script>
@@ -932,7 +1144,57 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     }
   }
 
-  /* Nav anchor targets land below the floating navbar pill. */
+  /* Entrance animations (see the reveal script). Never put data-reveal on
+     an element with its own animation (e.g. .cta-mesh): this rule sets
+     `animation` and would replace it; wrap the element instead. Hidden only once the
+     inline head script confirms JS is running, so no-JS visitors see
+     everything; reduced motion skips it entirely. `backwards` fill holds the
+     start frame through the stagger delay, then hands back to normal styles
+     so hover transitions and transforms on the element keep working. */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-ready [data-reveal]:not(.is-revealed) {
+      opacity: 0;
+    }
+    [data-reveal].is-revealed {
+      animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation-delay: calc(var(--reveal-i, 0) * 90ms);
+    }
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      translate: 0 28px;
+      filter: blur(6px);
+    }
+  }
+
+  /* Offer popup: dimmed, blurred backdrop; the card rises in. */
+  .offer::backdrop {
+    background: rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(4px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .offer[open] {
+      animation: offer-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .offer[open]::backdrop {
+      animation: offer-fade 0.4s ease-out;
+    }
+  }
+  @keyframes offer-in {
+    from {
+      opacity: 0;
+      translate: 0 24px;
+      scale: 0.96;
+    }
+  }
+  @keyframes offer-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* Nav anchor targets land below the sticky navbar. */
   [data-anchor] {
     scroll-margin-top: 7rem;
   }
@@ -1085,6 +1347,11 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     46%, 82% { clip-path: inset(-50% -2% -50% -2%); opacity: 1; }
     94% { clip-path: inset(-50% -2% -50% -2%); opacity: 0; }
     100% { clip-path: inset(-50% 100% -50% 0); opacity: 0; }
+  }
+
+  /* Business-type marquee in the perk cards (perk-loops.tsx). */
+  @keyframes perk-marquee {
+    to { transform: translateX(-50%); }
   }
 
   /* Orbit ring in the "why simple" cards (why-loops.tsx). */

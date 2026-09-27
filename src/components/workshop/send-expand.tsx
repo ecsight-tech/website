@@ -2,7 +2,7 @@ import { useState, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
 
 import { AppPreview, type AppFeature } from "@/components/workshop/app-preview";
-import { TRAIL, TRAIL_FROM, TRAIL_TO } from "@/components/workshop/send-expand-motion";
+import { OUTRO, TRAIL, TRAIL_FROM, TRAIL_TO } from "@/components/workshop/send-expand-motion";
 import { dwellRange, useSendExpand, useSendExpandRefs } from "@/components/workshop/use-send-expand";
 
 export type SendExpandContent = {
@@ -41,6 +41,10 @@ const panelBodyStyle: CSSProperties = {
  *    it is already pinned 150px before the sequence begins.
  *  • the outro marker drives the closing inset + rounding.
  */
+// Scroll per feature while the panel is fully open, in vh: how far the reader
+// scrolls to step from one feature to the next.
+const FEATURE_VH = 25;
+
 export function SendExpand(content: SendExpandContent) {
   const reduce = useReducedMotion();
   const refs = useSendExpandRefs();
@@ -79,9 +83,15 @@ export function SendExpand(content: SendExpandContent) {
 
   return (
     <div className="relative">
-      {/* 1000px + ~1.1 viewports cover the pin-in, expansion and exit; each
-          feature then gets half a viewport of scroll while fully open. */}
-      <div data-hide-nav className="relative flow-root" style={{ height: `calc(1000px + ${110 + 50 * n}vh)` }}>
+      {/* 1000px + half a viewport cover the pin-in and expansion, then the
+          exit (OUTRO.exitSpan); each feature gets FEATURE_VH of scroll while
+          fully open. Keep in sync with dwellRange, which carves the features'
+          slices out of this height. */}
+      <div
+        data-hide-nav
+        className="relative flow-root"
+        style={{ height: `calc(1000px + ${50 + OUTRO.exitSpan * 100 + FEATURE_VH * n}vh)` }}
+      >
         {/* Out of flow on purpose: its height is scroll budget, not layout. */}
         <div ref={refs.driver} className="pointer-events-none absolute top-[200px] left-0 h-[800px] w-full" aria-hidden="true" />
 
@@ -157,7 +167,9 @@ function PanelBody({
   onSelect,
 }: SendExpandContent & { active: number; onSelect: (i: number) => void }) {
   return (
-    <div className="h-full px-4 py-8 md:px-10 md:py-10 lg:px-14">
+    // Mobile: content centred vertically in the full-height panel ("safe" so a
+    // too-tall stack on a short phone aligns top instead of clipping).
+    <div className="flex h-full flex-col justify-center-safe px-4 py-8 md:block md:px-10 md:py-10 lg:px-14">
       <AppPreview heading={heading} features={features} active={active} onSelect={onSelect} />
     </div>
   );

@@ -64,8 +64,9 @@ export function HeroSpeakers({ speakers }: { speakers: Speaker[] }) {
       {speakers.map((p, i) => {
         const active = hovered === i;
         const dimmed = hovered !== null && !active;
-        // The second cut-out sits a little smaller and tucked behind.
-        const base = i === 1 ? 0.9 : 1;
+        // The first cut-out is a wider, half-body shot, so it's scaled up to
+        // match; the second sits a little smaller and tucked behind.
+        const base = i === 1 ? 0.9 : 1.2;
         return p.photo ? (
           <motion.img
             key={p.name}

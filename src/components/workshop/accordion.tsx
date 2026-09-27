@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { AddIcon, ChefHatIcon, TargetIcon } from "@solar-icons/react/linear";
+import { AddIcon, TargetIcon } from "@solar-icons/react/linear";
 import {
   BugIcon,
   CodeSquareIcon,
@@ -24,7 +24,6 @@ const icons = {
   bug: BugIcon,
   laptop: LaptopMinimalisticIcon,
   showcase: CupStarIcon,
-  lunch: ChefHatIcon,
 };
 
 export type AccordionIconName = keyof typeof icons;

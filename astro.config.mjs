@@ -16,6 +16,11 @@ const {
 
 // https://astro.build/config
 export default defineConfig({
+  // Absolute base for social-card URLs (og:image). Vercel sets the production
+  // domain at build time; locally it falls back to the dev server.
+  site: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined,
   // Static by default; API routes opt into SSR via `export const prerender = false`.
   adapter: vercel(),
   i18n: {

@@ -9,6 +9,8 @@ interface Props {
   description?: string;
   /** Pages default to the dark theme; standalone funnels can opt into light. */
   theme?: "dark" | "light";
+  /** Social share image, a path under /public (e.g. "/workshop/og.jpg"). */
+  image?: string;
 }
 
 const {
@@ -16,7 +18,11 @@ const {
   title = "Ecsight Group",
   description = "Ecsight Group is a digital agency building bold brands, products, and experiences for ambitious teams.",
   theme = "dark",
+  image,
 } = Astro.props;
+
+// Social crawlers need absolute URLs.
+const imageUrl = image && new URL(image, Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
@@ -27,6 +33,13 @@ const {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site ?? Astro.url).href} />
+    <meta name="twitter:card" content={imageUrl ? "summary_large_image" : "summary"} />
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

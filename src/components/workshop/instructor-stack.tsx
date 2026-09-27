@@ -14,7 +14,7 @@ export type Instructor = {
 
 // Sticky offset (px) shared by every card, so a later card lands exactly on
 // top of the earlier one.
-const STICKY_TOP = 96;
+const STICKY_TOP = 128;
 // How far a covered card shrinks back as the next card slides over it.
 const COVERED_SCALE = 0.9;
 // Photo backdrop: black dominant, orange secondary, a light highlight.

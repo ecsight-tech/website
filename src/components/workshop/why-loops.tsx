@@ -400,9 +400,10 @@ function Chat({ playing, reduce }: { playing: boolean; reduce: boolean }) {
   const sent = phase !== "prompt";
   const replying = phase === "reply" || phase === "app";
 
-  // Camera: zooms in only while a prompt is being typed, and pans with the
-  // caret. The caret's position as a fraction of the stage is unaffected by
-  // the stage's own scale, so it can be measured mid-zoom.
+  // Camera: zooms in only while a prompt is being typed, lifting the input
+  // bar to the card's vertical centre and panning sideways with the caret.
+  // The caret's position as a fraction of the stage is unaffected by the
+  // stage's own transform, so it can be measured mid-zoom.
   const stageRef = useRef<HTMLDivElement>(null);
   const caretRef = useRef<HTMLSpanElement>(null);
   const [focus, setFocus] = useState({ x: 0.5, y: 0.9 });
@@ -415,9 +416,17 @@ function Chat({ playing, reduce }: { playing: boolean; reduce: boolean }) {
     const y = (caret.top + caret.height / 2 - stage.top) / stage.height;
     setFocus({ x: Math.min(0.88, Math.max(0.12, x)), y });
   }, [typing, shown]);
+  // Scaling about the centre moves a point at fraction f to 0.5 + (f - 0.5)·S;
+  // translating by -(f - 0.5)·S centres it (y), while -(f - 0.5)·(S - 1)
+  // keeps it where it was (x, so the caret stays in view as it advances).
+  const ZOOM = 1.8;
   const camera = typing
-    ? { scale: 1.8, originX: focus.x, originY: focus.y }
-    : { scale: 1, originX: focus.x, originY: focus.y };
+    ? {
+        scale: ZOOM,
+        x: `${-(focus.x - 0.5) * (ZOOM - 1) * 100}%`,
+        y: `${-(focus.y - 0.5) * ZOOM * 100}%`,
+      }
+    : { scale: 1, x: "0%", y: "0%" };
 
   return (
     <AnimatePresence mode="wait">
@@ -429,13 +438,15 @@ function Chat({ playing, reduce }: { playing: boolean; reduce: boolean }) {
         transition={{
           opacity: { duration: 0.4 },
           scale: { duration: 0.8, ease },
-          originX: { duration: 0.35, ease: "easeOut" },
-          originY: { duration: 0.35, ease: "easeOut" },
+          y: { duration: 0.8, ease },
+          x: { duration: 0.35, ease: "easeOut" },
         }}
         ref={stageRef}
         className="absolute inset-0 flex flex-col gap-3 p-[7%]"
       >
-        {/* Thread: bottom-anchored, older messages scroll off the top. */}
+        {/* Thread: bottom-anchored, older messages scroll off the top. No
+            `layout` animations in here: they re-measure on every keystroke,
+            and mid-zoom the camera scale reads as movement, so it jumps. */}
         <div className="relative flex min-h-0 flex-1 flex-col justify-end overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_8%)]">
           <div className="flex flex-col gap-3">
             {turns.slice(0, turn).map((t) => (
@@ -443,19 +454,18 @@ function Chat({ playing, reduce }: { playing: boolean; reduce: boolean }) {
             ))}
             {sent ? <UserBubble text={current.ask} animate={!reduce} /> : null}
             {phase === "thinking" ? (
-              <motion.div layout className="py-1">
+              <motion.div className="py-1">
                 <TypingDots />
               </motion.div>
             ) : null}
             {replying ? (
-              <motion.div layout className="flex flex-col gap-2">
+              <motion.div className="flex flex-col gap-2">
                 <p className="text-sm leading-relaxed font-medium text-white [text-shadow:0_1px_8px_rgb(0_0_0/0.45)]">
                   {phase === "reply" ? replyParts.slice(0, shown).join("") : current.reply}
                   {phase === "reply" ? <Caret /> : null}
                 </p>
                 {phase === "app" ? (
                   <motion.div
-                    layout
                     initial={reduce ? false : { opacity: 0, y: 12, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.5, ease }}
@@ -499,7 +509,7 @@ function Chat({ playing, reduce }: { playing: boolean; reduce: boolean }) {
 
 function Exchange({ turn }: { turn: Turn }) {
   return (
-    <motion.div layout className="flex flex-col gap-3">
+    <motion.div className="flex flex-col gap-3">
       <UserBubble text={turn.ask} animate={false} />
       <p className="text-sm leading-relaxed font-medium text-white [text-shadow:0_1px_8px_rgb(0_0_0/0.45)]">{turn.reply}</p>
       <turn.App />
@@ -510,7 +520,6 @@ function Exchange({ turn }: { turn: Turn }) {
 function UserBubble({ text, animate }: { text: string; animate: boolean }) {
   return (
     <motion.p
-      layout
       initial={animate ? { opacity: 0, y: 16, scale: 0.96 } : false}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, ease }}

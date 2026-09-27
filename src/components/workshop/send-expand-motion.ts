@@ -39,7 +39,7 @@ export const OUTRO = {
   breakpoint: 810,
   /** Panel content shrinks over this fraction of a viewport of
    *  scroll just before the next section arrives (ends as the inset starts). */
-  exitSpan: 0.6,
+  exitSpan: 0.3,
 } as const;
 
 /** The traced outline and its gradient "hot tip". */

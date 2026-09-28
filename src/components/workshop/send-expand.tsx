@@ -3,7 +3,7 @@ import { useReducedMotion } from "motion/react";
 
 import { AppPreview, type AppFeature } from "@/components/workshop/app-preview";
 import { OUTRO, TRAIL, TRAIL_FROM, TRAIL_TO } from "@/components/workshop/send-expand-motion";
-import { dwellRange, useSendExpand, useSendExpandRefs } from "@/components/workshop/use-send-expand";
+import { useSendExpand, useSendExpandRefs } from "@/components/workshop/use-send-expand";
 
 export type SendExpandContent = {
   /** Label inside the resting pill. */
@@ -41,35 +41,19 @@ const panelBodyStyle: CSSProperties = {
  *    it is already pinned 150px before the sequence begins.
  *  • the outro marker drives the closing inset + rounding.
  */
-// Scroll per feature while the panel is fully open, in vh: how far the reader
-// scrolls to step from one feature to the next.
-const FEATURE_VH = 25;
+// How long the panel stays fully open (in vh of scroll) before it exits.
+// Features are switched by clicking, not scrolling, so this is one fixed hold
+// rather than a slice per feature.
+const HOLD_VH = 60;
 
 export function SendExpand(content: SendExpandContent) {
   const reduce = useReducedMotion();
   const refs = useSendExpandRefs();
-  const n = content.features.length;
-  // The fully-open dwell is split into one equal slice per feature; scrolling
-  // through it steps the active item.
+  // Clicking a pill or an arrow selects a feature; scroll only drives the
+  // expand / exit animation.
   const [active, setActive] = useState(0);
-  useSendExpand(refs, (p) => setActive(Math.min(n - 1, Math.floor(p * n))));
-
-  // Selecting scrolls to the middle of that feature's slice, so scroll
-  // position and the active item never disagree.
-  const scrollTo = (i: number) => {
-    const driver = refs.driver.current;
-    const outro = refs.outro.current;
-    if (!driver || !outro) return setActive(i);
-    const sy = window.scrollY;
-    const { start, end } = dwellRange(
-      driver.getBoundingClientRect().top + sy,
-      driver.offsetHeight,
-      outro.getBoundingClientRect().top + sy,
-      window.innerHeight,
-    );
-    window.scrollTo({ top: start + ((i + 0.5) / n) * (end - start), behavior: "smooth" });
-  };
-  const preview = { active, onSelect: reduce ? setActive : scrollTo };
+  useSendExpand(refs);
+  const preview = { active, onSelect: setActive };
 
   if (reduce) {
     return (
@@ -84,13 +68,11 @@ export function SendExpand(content: SendExpandContent) {
   return (
     <div className="relative">
       {/* 1000px + half a viewport cover the pin-in and expansion, then the
-          exit (OUTRO.exitSpan); each feature gets FEATURE_VH of scroll while
-          fully open. Keep in sync with dwellRange, which carves the features'
-          slices out of this height. */}
+          panel holds open for HOLD_VH before the exit (OUTRO.exitSpan). */}
       <div
         data-hide-nav
         className="relative flow-root"
-        style={{ height: `calc(1000px + ${50 + OUTRO.exitSpan * 100 + FEATURE_VH * n}vh)` }}
+        style={{ height: `calc(1000px + ${50 + OUTRO.exitSpan * 100 + HOLD_VH}vh)` }}
       >
         {/* Out of flow on purpose: its height is scroll budget, not layout. */}
         <div ref={refs.driver} className="pointer-events-none absolute top-[200px] left-0 h-[800px] w-full" aria-hidden="true" />

@@ -1,7 +1,18 @@
 ---
 import { existsSync } from "node:fs";
 import { CheckIcon } from "@solar-icons/react/linear";
-import { CalendarIcon, GiftIcon, MapPointIcon, PauseIcon, PlayIcon } from "@solar-icons/react/bold";
+import {
+  CalendarIcon,
+  CartLarge2Icon,
+  CloseCircleIcon,
+  GiftIcon,
+  LightbulbBoltIcon,
+  MapPointIcon,
+  PauseIcon,
+  PlayIcon,
+  ShopIcon,
+  UsersGroupTwoRoundedIcon,
+} from "@solar-icons/react/bold";
 
 import Layout from "@/layouts/Layout.astro";
 import { Accordion, type AccordionItem } from "@/components/workshop/accordion";
@@ -85,6 +96,44 @@ const content = {
       loop: "chat",
     },
   ] satisfies (Card & { loop: WhyLoopVariant })[],
+
+  // Who the class is for (after the app demo): four personas, each with the
+  // pain they'd recognise and what they leave with, then an honest "not for".
+  audienceHeading: ["", "ถ้าคุณเป็นหนึ่งในนี้ คลาสนี้ทำมาเพื่อคุณ"],
+  audience: [
+    {
+      Icon: ShopIcon,
+      title: "เจ้าของธุรกิจ / SME",
+      pain: "อยากได้ระบบของตัวเอง แต่ไม่อยากจ้าง developer หลักแสน",
+      gain: "สร้างเครื่องมือที่ตรงกับธุรกิจคุณได้เอง",
+    },
+    {
+      Icon: UsersGroupTwoRoundedIcon,
+      title: "ผู้จัดการ / หัวหน้าทีม",
+      pain: "ทีมเสียเวลากับงานซ้ำ ๆ ใน Excel และแชตทุกสัปดาห์",
+      gain: "เปลี่ยนงานซ้ำเป็นแอปที่ทีมใช้ได้จริง",
+    },
+    {
+      Icon: CartLarge2Icon,
+      title: "ฟรีแลนซ์ / ร้านออนไลน์",
+      pain: "อยากมีหน้าจองคิว ฟอร์มรับออเดอร์ หรือแดชบอร์ดยอดขายของตัวเอง",
+      gain: "มีแอปพร้อมลิงก์ใช้งานจริงให้ลูกค้า",
+    },
+    {
+      Icon: LightbulbBoltIcon,
+      title: "คนที่ไม่เคยเขียนโค้ด",
+      pain: "สนใจ AI แต่ไม่รู้จะเริ่มตรงไหน กลัวว่ายากเกินไป",
+      gain: "ลงมือทำจนเห็นผลจริงภายใน 1 วัน",
+    },
+  ],
+  audiencePainLabel: "ปัญหาที่เจอ",
+  audienceGainLabel: "สิ่งที่ได้กลับไป",
+  notForHeading: "คลาสนี้อาจไม่เหมาะ ถ้าคุณ…",
+  notFor: [
+    "เป็น developer ที่อยากเรียนเชิงลึกเรื่อง architecture หรือ DevOps",
+    "มองหาคอร์สทฤษฎี AI มากกว่าการลงมือสร้างจริง",
+    "ไม่ได้มีไอเดียหรือปัญหาในงานที่อยากแก้ด้วยแอป",
+  ],
 
   perksHeading: [
     "เราอยากให้เงินที่คุณจ่ายมาคุ้มค่า",
@@ -561,6 +610,64 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     <!-- Send expand: a pill that grows full-screen into the app preview. -->
     <section class="w-full">
       <SendExpand client:visible {...content.showcase} />
+    </section>
+
+    <!-- Who it's for: persona cards (pain as a chat bubble, what they leave
+         with underneath), then an honest "might not suit you" strip. -->
+    <section class={section}>
+      <h2 data-reveal class={heading}>
+        {content.audienceHeading.filter(Boolean).map((line) => <span class="block">{line}</span>)}
+      </h2>
+      <div class="mt-12 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-5">
+        {
+          content.audience.map(({ Icon, title, pain, gain }, i) => (
+            <article
+              data-reveal
+              style={`--reveal-i: ${i % 2}`}
+              class="group relative isolate flex flex-col overflow-hidden rounded-3xl bg-white p-6 shadow-[0_1px_2px_rgb(0_0_0/0.04),0_12px_32px_-16px_rgb(0_0_0/0.18)] ring-1 ring-black/5 transition-[translate] duration-500 ease-out hover:-translate-y-1 md:p-8"
+            >
+              <!-- Large faint icon floating top-right, behind the content. -->
+              <Icon
+                aria-hidden="true"
+                className="pointer-events-none absolute top-3 right-3 -z-10 size-24 md:top-4 md:right-4 text-[#ff6a13] opacity-[0.12] transition-transform duration-500 ease-out group-hover:scale-110 md:size-28"
+              />
+
+              <h3 class="pr-20 text-xl font-medium md:pr-28 md:text-2xl">{title}</h3>
+
+              <p class="mt-5 text-xs font-medium tracking-wide text-foreground/40">{content.audiencePainLabel}</p>
+              <p class="mt-2 w-fit rounded-2xl rounded-tl-md bg-neutral-100 px-4 py-3 leading-relaxed text-foreground/75 md:text-lg">
+                {pain}
+              </p>
+
+              <div class="mt-auto pt-6">
+                <p class="flex items-start gap-3 rounded-2xl bg-[#ff6a13]/[0.07] px-4 py-3">
+                  <span class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#ff6a13] text-white">
+                    <CheckIcon className="size-3" />
+                  </span>
+                  <span>
+                    <span class="block text-xs font-medium text-[#ff6a13]">{content.audienceGainLabel}</span>
+                    <span class="font-medium">{gain}</span>
+                  </span>
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div data-reveal class="mt-4 flex flex-col gap-4 rounded-3xl bg-neutral-100 p-6 md:mt-5 md:flex-row md:items-center md:gap-6 md:px-8">
+        <p class="shrink-0 font-medium">{content.notForHeading}</p>
+        <ul class="flex flex-wrap gap-2">
+          {
+            content.notFor.map((t) => (
+              <li class="flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-sm text-foreground/60 ring-1 ring-black/5">
+                <CloseCircleIcon className="size-4 shrink-0 text-foreground/25" />
+                {t}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </section>
 
     <!-- Perks bento -->

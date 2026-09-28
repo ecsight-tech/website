@@ -15,7 +15,8 @@ import { PhotoStack } from "@/components/workshop/photo-stack";
 import ClassBackdrop from "@/components/workshop/ClassBackdrop.astro";
 import { SendExpand, type SendExpandContent } from "@/components/workshop/send-expand";
 
-// TODO: replace with the real registration / payment link.
+// TODO: replace with the real registration link. Booking buttons tied to a
+// specific plan use that plan's `checkout` link instead (see `plans`).
 const REGISTER_URL = "#";
 
 // Instructor cut-outs live in /public/workshop — render a placeholder until
@@ -34,6 +35,8 @@ type Plan = {
   features: string[];
   note: string;
   featured?: boolean;
+  /** Payment page for this plan; falls back to REGISTER_URL. */
+  checkout?: string;
   bonus?: { label: string; title: string; body: string };
 };
 
@@ -269,6 +272,7 @@ const content = {
       code: "ECHO1700",
       discount: "1,700 บาท",
       featured: true,
+      checkout: "https://academy.ecsight.tech/p/build-apps-with-ai-1/checkout",
       features: [
         "ผู้เรียน 1 ที่นั่ง",
         "Workshop เต็มวัน (09:00 - 17:30 น.)",
@@ -411,6 +415,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
       </nav>
       <a
         href={REGISTER_URL}
+        data-book
         class="ml-2 hidden rounded-full bg-black px-5 py-2.5 font-semibold text-white transition-transform duration-300 hover:scale-[1.03] lg:inline-flex"
       >
         {content.navCta}
@@ -524,7 +529,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
             <!-- Reveal on a wrapper: on the button itself it would replace the
                  cta-mesh animation. -->
             <div data-reveal style="--reveal-i: 4" class="mt-10">
-              <a href={REGISTER_URL} class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
+              <a href={REGISTER_URL} data-book class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
                 {content.cta}
               </a>
             </div>
@@ -623,7 +628,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
             {content.bannerHeadline[0]}<br />{content.bannerHeadline[1]}
           </p>
         </div>
-        <a href={REGISTER_URL} class:list={[whitePill, "w-full md:w-auto md:px-12"]}>
+        <a href={REGISTER_URL} data-book class:list={[whitePill, "w-full md:w-auto md:px-12"]}>
           {content.bannerCta}
         </a>
       </div>
@@ -735,7 +740,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
                   </div>
                 </div>
               ) : null}
-              <a href={REGISTER_URL} class:list={[whitePill, "mt-10 w-full"]}>
+              <a href={plan.checkout ?? REGISTER_URL} data-book class:list={[whitePill, "mt-10 w-full"]}>
                 {content.register}
               </a>
               <p class="mt-4 text-center text-sm opacity-80">{plan.note}</p>
@@ -766,7 +771,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
         </h2>
         <p data-reveal style="--reveal-i: 1" class="mt-6 text-white/80 md:text-lg">{content.finalSub}</p>
         <div data-reveal style="--reveal-i: 2" class="mt-12 w-full sm:w-auto">
-          <a href={REGISTER_URL} class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
+          <a href={REGISTER_URL} data-book class:list={[orangePill, "w-full sm:w-auto sm:px-20"]}>
             {content.cta}
           </a>
         </div>
@@ -856,7 +861,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
         </p>
         <p class="mt-1 text-sm text-[#ff9a55]">ลด {barPlan.discount} · {content.offer.seats}</p>
 
-        <a href={REGISTER_URL} class:list={[orangePill, "mt-8 w-full"]}>{content.offer.cta}</a>
+        <a href={barPlan.checkout ?? REGISTER_URL} data-book class:list={[orangePill, "mt-8 w-full"]}>{content.offer.cta}</a>
         <form method="dialog" class="mt-2">
           <button class="w-full cursor-pointer py-3 text-sm text-white/50 transition-colors hover:text-white/80">
             {content.offer.dismiss}
@@ -883,7 +888,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
           <span class="truncate text-sm text-foreground/40 line-through">{barPlan.was}</span>
         </p>
       </div>
-      <a href={REGISTER_URL} class:list={[orangePill, "shrink-0 px-6 py-3 text-base"]}>
+      <a href={barPlan.checkout ?? REGISTER_URL} data-book class:list={[orangePill, "shrink-0 px-6 py-3 text-base"]}>
         {content.navCta}
       </a>
     </div>
@@ -982,10 +987,9 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     } catch {}
   };
 
-  // Clicking any booking link (the register URL) means no popup is needed.
-  const registerHref = offer?.querySelector<HTMLAnchorElement>("a")?.getAttribute("href");
-  document.querySelectorAll<HTMLAnchorElement>("a").forEach((a) => {
-    if (a.getAttribute("href") === registerHref && !offer?.contains(a)) a.addEventListener("click", markDone);
+  // Clicking any booking button ([data-book]) means no popup is needed.
+  document.querySelectorAll<HTMLAnchorElement>("[data-book]").forEach((a) => {
+    if (!offer?.contains(a)) a.addEventListener("click", markDone);
   });
 
   if (offer && pricing && !done() && typeof offer.showModal === "function") {

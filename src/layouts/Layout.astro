@@ -30,7 +30,7 @@ const imageUrl = image && new URL(image, Astro.site ?? Astro.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- SVG favicon (adapts to light/dark tabs); .ico for browsers without SVG favicon support. -->
+    <!-- SVG favicon; .ico for browsers without SVG favicon support. -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>

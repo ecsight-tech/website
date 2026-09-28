@@ -32,7 +32,7 @@ type Plan = {
   badge: string;
   was: string;
   price: string;
-  code: string;
+  /** Saving against `was`, shown as "ประหยัด …". */
   discount: string;
   features: string[];
   note: string;
@@ -63,7 +63,7 @@ const content = {
   date: ["31 ตุลาคม 2569", "09:00 - 17:00 น."],
   venue: ["KX Building", "BTS วงเวียนใหญ่ (มีที่จอดรถ)"],
   cta: "จองที่นั่งเลย (จำกัด 20 ท่าน)",
-  promo: "กรอกโค้ด XXXX เหลือ 4,990 บาท จาก 6,990 บาท",
+  promo: "ราคาพิเศษ 4,990 บาท จากปกติ 6,990 บาท",
   // Countdown strip above the navbar: to the class start (matches `date`).
   countdown: { label: "รุ่นที่ 1 เริ่มคลาสในอีก", target: "2026-10-31T09:00:00+07:00" },
 
@@ -256,12 +256,9 @@ const content = {
   // Offer popup shown once after scrolling past pricing without booking.
   offer: {
     eyebrow: "ก่อนไปต่อ",
-    headline: "รับส่วนลดนี้ไว้ก่อนนะ",
-    body: "กรอกโค้ดนี้ตอนสมัคร",
-    copy: "คัดลอก",
-    copied: "คัดลอกแล้ว",
+    headline: "จองในราคาพิเศษนี้ไว้ก่อนนะ",
     seats: "ที่นั่งจำกัดเพียง 20 ท่าน",
-    cta: "ใช้โค้ดแล้วจองที่นั่ง",
+    cta: "จองที่นั่งเลย",
     dismiss: "ไว้ทีหลัง",
     close: "ปิด",
   },
@@ -270,9 +267,8 @@ const content = {
       name: "Solo",
       badge: "ยอดนิยมที่สุด",
       was: "6,990 บาท",
-      price: "5,290",
-      code: "ECHO1700",
-      discount: "1,700 บาท",
+      price: "4,990",
+      discount: "2,000 บาท",
       featured: true,
       checkout: SOLO_CHECKOUT,
       features: [
@@ -291,7 +287,6 @@ const content = {
       badge: "คุ้มค่าที่สุด",
       was: "13,980 บาท",
       price: "9,999",
-      code: "ECHO3981",
       discount: "3,981 บาท",
       features: [
         "ผู้เรียน 2 ที่นั่ง (ตกท่านละไม่ถึง 5,000 บาท)",
@@ -721,9 +716,7 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
                 <span class="text-6xl font-semibold">{plan.price}</span>
                 <span class="text-2xl opacity-70">บาท</span>
               </p>
-              <p class="mt-4 text-sm opacity-70">
-                กรอกโค้ด <strong class="font-semibold opacity-100">{plan.code}</strong> รับส่วนลด {plan.discount}
-              </p>
+              <p class="mt-4 text-sm opacity-70">ประหยัด {plan.discount}</p>
               <ul class="mt-10 flex flex-col gap-4">
                 {plan.features.map((f) => (
                   <li class="flex items-start gap-3 text-lg">
@@ -842,26 +835,12 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
         <p class="text-[#ff7a2a]">{content.offer.eyebrow}</p>
         <h2 id="offer-title" class="mt-2 text-3xl leading-snug md:text-4xl">{content.offer.headline}</h2>
 
-        <p class="mt-6 text-sm text-white/60 md:mt-8">{content.offer.body}</p>
-        <div class="mt-2 flex items-center gap-2 rounded-2xl bg-white/10 p-2 pl-5 ring-1 ring-white/15 ring-inset">
-          <span class="flex-1 font-mono text-xl font-semibold tracking-wider md:text-2xl">{barPlan.code}</span>
-          <button
-            type="button"
-            data-offer-copy
-            data-code={barPlan.code}
-            data-copied={content.offer.copied}
-            class="cursor-pointer rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition-transform active:scale-95"
-          >
-            {content.offer.copy}
-          </button>
-        </div>
-
-        <p class="mt-5 flex items-baseline gap-2 md:mt-6">
+        <p class="mt-8 flex items-baseline gap-2 md:mt-10">
           <span class="text-4xl font-semibold md:text-5xl">{barPlan.price}</span>
           <span class="text-white/60">บาท</span>
           <span class="text-white/40 line-through">{barPlan.was}</span>
         </p>
-        <p class="mt-1 text-sm text-[#ff9a55]">ลด {barPlan.discount} · {content.offer.seats}</p>
+        <p class="mt-1 text-sm text-[#ff9a55]">ประหยัด {barPlan.discount} · {content.offer.seats}</p>
 
         <a href={barPlan.checkout ?? REGISTER_URL} data-book class:list={[orangePill, "mt-8 w-full"]}>{content.offer.cta}</a>
         <form method="dialog" class="mt-2">
@@ -1012,15 +991,6 @@ const section = "mx-auto w-full max-w-6xl px-4 md:px-6";
     if (e.target === offer) offer.close();
   });
 
-  offer?.querySelector<HTMLButtonElement>("[data-offer-copy]")?.addEventListener("click", async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const label = btn.textContent;
-    try {
-      await navigator.clipboard.writeText(btn.dataset.code ?? "");
-      btn.textContent = btn.dataset.copied ?? label;
-      setTimeout(() => (btn.textContent = label), 1600);
-    } catch {}
-  });
 </script>
 
 <script>

@@ -29,7 +29,6 @@ import { SendExpand, type SendExpandContent } from "@/components/workshop/send-e
 // General booking buttons (nav, hero, CTAs) go straight to the Solo checkout.
 const SOLO_CHECKOUT = "https://academy.ecsight.tech/p/build-apps-with-ai-1/checkout";
 // Fallback for a plan without its own `checkout` link (see `plans`).
-// TODO: the Duo plan's checkout link.
 const REGISTER_URL = "#";
 
 // Instructor cut-outs live in /public/workshop — render a placeholder until
@@ -335,8 +334,9 @@ const content = {
       name: "Duo",
       badge: "คุ้มค่าที่สุด",
       was: "13,980 บาท",
-      price: "9,999",
-      discount: "3,981 บาท",
+      price: "9,980",
+      discount: "4,000 บาท",
+      checkout: "https://buy.stripe.com/6oU8wO3N1dgn93H3NC3wQ08?prefilled_promo_code=ECHO4000",
       features: [
         "ผู้เรียน 2 ที่นั่ง (ตกท่านละไม่ถึง 5,000 บาท)",
         "Workshop เต็มวัน (09:00 - 17:30 น.)",

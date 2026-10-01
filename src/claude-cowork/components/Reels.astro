@@ -1,0 +1,58 @@
+---
+const videoId = "jiZDUnuu3FY";
+const embedSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1&modestbranding=0&playsinline=0&rel=0`;
+---
+
+<div
+  id="reels-widget"
+  class="reels-widget fixed bottom-4 right-4 z-50 w-[180px] sm:w-[220px] aspect-9/16 rounded-xl overflow-hidden shadow-2xl ring-1 ring-black/10 bg-black"
+>
+  <button
+    type="button"
+    id="reels-close"
+    aria-label="Close video"
+    class="absolute top-1.5 right-1.5 z-10 grid place-items-center w-7 h-7 rounded-full bg-black/60 text-white text-xl hover:bg-black/80 transition"
+  >
+    ×
+  </button>
+  <iframe
+    id="reels-iframe"
+    data-src={embedSrc}
+    title="YouTube Short"
+    class="absolute inset-0 w-full h-full border-0"
+    allow="autoplay; encrypted-media; fullscreen; picture-in-picture; web-share"
+    allowfullscreen
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+<style>
+  .reels-widget {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: reels-fade-up 600ms ease-out 5s forwards;
+  }
+  @keyframes reels-fade-up {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reels-widget {
+      animation-duration: 1ms;
+      transform: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.getElementById("reels-close")?.addEventListener("click", () => {
+    document.getElementById("reels-widget")?.remove();
+  });
+  setTimeout(() => {
+    const iframe = document.getElementById("reels-iframe");
+    const src = iframe?.dataset.src;
+    if (iframe && src) iframe.src = src;
+  }, 5000);
+</script>

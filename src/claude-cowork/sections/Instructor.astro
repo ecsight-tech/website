@@ -1,0 +1,72 @@
+---
+import { Image } from "astro:assets";
+import Reveal from "../components/Reveal.tsx";
+import { instructor } from "../data/content";
+
+const { stats } = instructor;
+---
+
+<section
+  id="instructor"
+  class="bg-bg-deep px-6 py-[120px] md:px-10 md:py-[160px]"
+>
+  <div
+    class="mx-auto grid max-w-[1140px] grid-cols-1 items-center gap-12 lg:grid-cols-[420px_1fr] lg:gap-20"
+  >
+    <Reveal client:visible>
+      <div
+        class="relative mx-auto aspect-4/5 w-full max-w-[420px] overflow-hidden rounded-[32px] md:rounded-[40px]"
+      >
+        <Image
+          src={instructor.image}
+          alt={instructor.name}
+          widths={[420, 640, 840]}
+          sizes="(min-width: 1024px) 420px, 100vw"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <div class="absolute inset-x-6 bottom-6 text-white">
+          <p class="text-xs uppercase tracking-[0.2em] text-brand">
+            {instructor.handle}
+          </p>
+        </div>
+      </div>
+    </Reveal>
+
+    <Reveal client:visible delay={0.1}>
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-3">
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.2em] text-brand md:text-base"
+          >
+            ผู้สอน
+          </p>
+          <h2
+            class="text-[36px] font-semibold leading-[1.1] tracking-[-0.02em] text-white md:text-[48px] lg:text-[56px]"
+          >
+            {instructor.name}
+          </h2>
+          <p class="text-lg text-ink-muted md:text-xl">
+            {instructor.title}
+          </p>
+        </div>
+
+        <p class="text-base leading-relaxed text-ink-muted md:text-lg">
+          {instructor.bio}
+        </p>
+
+        <dl class="grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
+          {
+            stats.map((s) => (
+              <div class="flex flex-col gap-1">
+                <dt class="text-3xl font-semibold text-brand md:text-4xl font-mono">
+                  {s.value}
+                </dt>
+                <dd class="text-sm text-ink-muted md:text-base">{s.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </Reveal>
+  </div>
+</section>

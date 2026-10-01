@@ -1,0 +1,85 @@
+---
+import SectionHeading from "../components/SectionHeading.astro";
+import Reveal from "../components/Reveal.tsx";
+import {
+  agendaPre as pre,
+  agendaPost as post,
+  workshop,
+} from "../data/content";
+---
+
+<section id="agenda" class="bg-bg-deep px-6 py-[120px] md:px-10 md:py-[160px]">
+  <div class="mx-auto flex max-w-[1140px] flex-col gap-16">
+    <div class="flex justify-between items-end">
+      <SectionHeading eyebrow="ตารางเวลา" title="Agenda" />
+      <a
+        href={workshop.registerHref}
+        class="inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-all hover:scale-105 md:text-lg"
+      >
+        ลงทะเบียน Workshop
+      </a>
+    </div>
+
+    <div class="flex flex-col">
+      {
+        pre.map((row, i) => (
+          <Reveal client:visible delay={i * 0.06}>
+            <div
+              class={`grid grid-cols-1 gap-4 py-10 md:grid-cols-[200px_1fr] md:gap-[154px] md:py-16`}
+            >
+              <p class="whitespace-nowrap font-mono text-sm font-bold tracking-[0.2em] text-brand md:text-lg mb-4">
+                {row.time}
+              </p>
+              <div class="flex flex-col gap-2">
+                <p class="text-base font-semibold text-brand md:text-lg">
+                  {row.tag}
+                </p>
+                <h3 class="text-xl font-semibold text-white md:text-2xl">
+                  {row.title}
+                </h3>
+                <p class="text-lg leading-relaxed text-ink-muted md:text-xl">
+                  {row.body}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        ))
+      }
+    </div>
+
+    <div
+      class="relative flex h-[80px] items-center justify-center md:h-[100px]"
+    >
+      <div class="absolute inset-x-0 top-1/2 h-px bg-border-soft"></div>
+      <p class="relative bg-bg-deep px-6 text-base text-ink-muted md:text-lg">
+        เ บ ร ก พั ก เ ที่ ย ง
+      </p>
+    </div>
+    <div class="flex flex-col divide-y divide-border-soft">
+      {
+        post.map((row, i) => (
+          <Reveal client:visible delay={i * 0.06}>
+            <div
+              class={`grid grid-cols-1 gap-4 py-10 md:grid-cols-[200px_1fr] md:gap-[154px] md:py-16`}
+            >
+              <p class="whitespace-nowrap font-mono text-sm font-bold tracking-[0.2em] text-brand md:text-lg mb-4">
+                {row.time}
+              </p>
+              <div class="flex flex-col gap-2">
+                <p class="text-base font-semibold text-brand md:text-lg">
+                  {row.tag}
+                </p>
+                <h3 class="text-xl font-semibold text-white md:text-2xl">
+                  {row.title}
+                </h3>
+                <p class="text-lg leading-relaxed text-ink-muted md:text-xl">
+                  {row.body}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,44 @@
+---
+import { Image } from "astro:assets";
+import { navLinks as links, workshop } from "../data/content";
+import deLogo from "../assets/de_logo.png";
+import ecLogo from "../assets/ec_logo.png";
+---
+
+<div class="p-3 text-center md:text-lg bg-bg-deep text-white">
+  กรอกโค้ด <span class="font-bold">ECHO1700</span> ลด 1,700 บาท เหลือ 5,290 บาท
+</div>
+<header
+  class="sticky top-0 z-50 bg-bg/70 backdrop-blur-xl backdrop-saturate-150"
+>
+  <nav
+    class="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-6 md:h-[88px] md:px-8"
+  >
+    <a href="#top" class="flex items-center gap-6 md:gap-8 size-10 md:size-12">
+      <Image src={ecLogo} alt="data echooo" loading="eager" />
+      <Image src={deLogo} alt="data echooo" loading="eager" />
+    </a>
+
+    <ul class="hidden items-center gap-10 lg:flex xl:gap-16">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="text-lg font-semibold text-ink-muted transition-colors hover:text-ink xl:text-xl"
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      href={workshop.registerHref}
+      class="inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-all hover:scale-105 md:text-lg"
+    >
+      ลงทะเบียน
+    </a>
+  </nav>
+</header>

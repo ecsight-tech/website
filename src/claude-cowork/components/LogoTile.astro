@@ -1,0 +1,20 @@
+---
+interface Props {
+  label: string;
+  bg?: string;
+}
+const { label, bg = "bg-white" } = Astro.props;
+const initials = label
+  .split(" ")
+  .map((w) => w[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<div
+  class={`${bg} flex size-[72px] items-center justify-center rounded-2xl border border-neutral-200 text-xl font-bold text-neutral-800 md:size-[100px] md:rounded-3xl md:text-3xl`}
+  aria-label={label}
+>
+  {initials}
+</div>

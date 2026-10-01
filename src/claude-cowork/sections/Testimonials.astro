@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import HighlightedHeading from "../components/HighlightedHeading.tsx";
+import Reveal from "../components/Reveal.tsx";
+import { Quote, Smile } from "lucide-react";
+import { reviews } from "../data/content";
+---
+
+<section class="bg-bg px-6 py-[120px] md:px-10 md:py-[160px]">
+  <div class="mx-auto flex max-w-[1140px] flex-col gap-16">
+    <HighlightedHeading
+      client:visible
+      prefix="รีวิวจาก"
+      highlight="นักเรียนรุ่นล่าสุด"
+      align="left"
+    />
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {
+        reviews.map((r, i) => (
+          <Reveal client:visible delay={i * 0.08}>
+            <blockquote class="flex h-full flex-col gap-8 rounded-[32px] bg-white/10 p-8 md:p-10">
+              <Quote
+                className="size-9 -scale-x-100 text-brand"
+                fill="currentColor"
+                strokeWidth={0}
+              />
+              <p class="flex-1 leading-relaxed text-white/50 text-2xl font-semibold">
+                {r.quote.map((seg) =>
+                  seg.highlight ? (
+                    <span class="text-white">{seg.text}</span>
+                  ) : (
+                    seg.text
+                  ),
+                )}
+              </p>
+              <footer class="flex items-center gap-4">
+                {r.image ? (
+                  <Image
+                    src={r.image}
+                    alt={r.name}
+                    width={96}
+                    height={96}
+                    loading="lazy"
+                    class="size-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <div class="flex size-12 items-center justify-center rounded-full bg-brand/15 text-brand">
+                    <Smile className="size-6" strokeWidth={2} />
+                  </div>
+                )}
+                <div class="flex flex-col">
+                  <p class="text-base md:text-lg font-semibold text-white">
+                    {r.name}
+                  </p>
+                  <p class="text-sm md:text-base text-ink-muted">
+                    {r.role} · {r.batch}
+                  </p>
+                </div>
+              </footer>
+            </blockquote>
+          </Reveal>
+        ))
+      }
+    </div>
+  </div>
+</section>

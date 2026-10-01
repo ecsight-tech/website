@@ -1,0 +1,31 @@
+---
+interface Props {
+  href?: string;
+  label?: string;
+  caption?: string;
+  size?: "lg" | "md";
+  align?: "center" | "start";
+}
+
+const {
+  href = "#register",
+  label = "ลงทะเบียน Workshop",
+  caption,
+  size = "lg",
+  align = "center",
+} = Astro.props;
+
+const padding = size === "lg" ? "px-8 py-5 text-xl md:text-2xl" : "px-6 py-3 text-base";
+const wrap = align === "center" ? "items-center text-center" : "items-start text-left";
+---
+
+<div class={`flex flex-col gap-5 ${wrap}`}>
+  <a
+    href={href}
+    class={`group relative inline-flex items-center justify-center ${padding} rounded-[20px] bg-brand font-semibold text-white shadow-[0_10px_40px_-10px_rgba(233,113,58,0.6)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_-10px_rgba(233,113,58,0.7)] active:translate-y-0`}
+  >
+    <span class="relative z-10">{label}</span>
+    <span class="absolute inset-0 rounded-[20px] bg-gradient-to-b from-white/15 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"></span>
+  </a>
+  {caption && <p class="text-base text-ink-muted md:text-lg">{caption}</p>}
+</div>

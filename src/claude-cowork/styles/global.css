@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #1a1613;
+  --color-bg-deep: #000000;
+  --color-brand: #e9713a;
+  --color-brand-warm: #d97757;
+  --color-ink: #ffffff;
+  --color-ink-muted: #cccccc;
+  --color-border-soft: #333333;
+
+  --font-thai: "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-thai);
+    background: var(--color-bg);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: #000;
+  }
+}

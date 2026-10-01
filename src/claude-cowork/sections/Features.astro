@@ -1,0 +1,38 @@
+---
+import SectionHeading from "../components/SectionHeading.astro";
+import Reveal from "../components/Reveal.tsx";
+import { features } from "../data/content";
+---
+
+<section id="content" class="bg-bg px-6 py-[120px] md:px-10 md:py-[160px]">
+  <div class="mx-auto flex max-w-[1140px] flex-col gap-16">
+    <SectionHeading
+      eyebrow="สิ่งที่จะได้รับ"
+      title="เนื้อหาที่จะได้เรียนรู้ใน 1 วันเต็ม"
+    />
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {
+        features.map((f, i) => (
+          <Reveal client:visible delay={i * 0.08}>
+            <article class="group relative h-full overflow-hidden rounded-[36px] bg-white/10 p-8 transition-colors duration-300 hover:bg-white/[0.07] md:rounded-[48px] md:p-10">
+              <div class="flex size-[64px] items-start justify-center rounded-[20px] bg-brand pb-3 pt-3.5 md:size-[80px] md:rounded-3xl md:pb-4 md:pt-[17px]">
+                <f.icon
+                  className="size-10 text-white md:size-12"
+                  strokeWidth={2}
+                />
+              </div>
+              <div class="mt-8 flex flex-col gap-2 md:mt-10">
+                <h3 class="text-xl font-semibold text-white md:text-2xl">
+                  {f.title}
+                </h3>
+                <p class="text-base text-ink-muted md:text-xl">{f.body}</p>
+              </div>
+              <div class="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-brand/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+            </article>
+          </Reveal>
+        ))
+      }
+    </div>
+  </div>
+</section>

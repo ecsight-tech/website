@@ -1,0 +1,34 @@
+---
+import Layout from "../claude-cowork/layouts/Layout.astro";
+import Nav from "../claude-cowork/components/Nav.astro";
+import Hero from "../claude-cowork/sections/Hero.tsx";
+import Problem from "../claude-cowork/sections/Problem.tsx";
+import Features from "../claude-cowork/sections/Features.astro";
+import Agenda from "../claude-cowork/sections/Agenda.astro";
+import Audience from "../claude-cowork/sections/Audience.astro";
+import Gallery from "../claude-cowork/sections/Gallery.astro";
+import Instructor from "../claude-cowork/sections/Instructor.astro";
+import Testimonials from "../claude-cowork/sections/Testimonials.astro";
+import Pricing from "../claude-cowork/sections/Pricing.astro";
+import FAQ from "../claude-cowork/sections/FAQ.tsx";
+import FinalCTA from "../claude-cowork/sections/FinalCTA.astro";
+import Reels from "../claude-cowork/components/Reels.astro";
+---
+
+<Layout>
+  <Reels client:load />
+  <Nav />
+  <main>
+    <Hero client:load />
+    <Problem client:visible />
+    <Features />
+    <Agenda />
+    <Audience />
+    <Gallery />
+    <Instructor />
+    <Testimonials />
+    <Pricing />
+    <FAQ client:visible />
+    <FinalCTA />
+  </main>
+</Layout>

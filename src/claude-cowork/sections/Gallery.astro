@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import SectionHeading from "../components/SectionHeading.astro";
+import { galleryRows, workshop } from "../data/content";
+
+const durations = ["60s", "60s", "60s"];
+const directions = ["normal", "reverse", "normal"];
+---
+
+<section class="bg-bg-deep py-[120px] md:py-[160px]">
+  <div class="mx-auto flex max-w-[1140px] flex-col gap-16 px-6 md:px-10">
+    <div
+      class="flex flex-col md:flex-row gap-8 justify-between items-start md:items-end"
+    >
+      <SectionHeading
+        eyebrow="Previous batches"
+        title="บรรยากาศในรุ่นที่ผ่านมา"
+      />
+      <a
+        href={workshop.registerHref}
+        class="inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-all hover:scale-105 md:text-lg"
+      >
+        ลงทะเบียน Workshop
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-16 flex flex-col gap-4 md:mt-20 md:gap-6">
+    {
+      galleryRows.map((row, rowIdx) => (
+        <div class="marquee group overflow-hidden">
+          <div
+            class="marquee-track flex w-max gap-4 md:gap-6"
+            style={`--duration:${durations[rowIdx]};--direction:${directions[rowIdx]};`}
+          >
+            {[...row, ...row, ...row].map((src, i) => (
+              <figure class="relative aspect-4/3 w-[256px] md:w-[512px] shrink-0 overflow-hidden rounded-xl md:rounded-3xl border border-white/10">
+                <Image
+                  src={src}
+                  alt={`Workshop moment ${rowIdx + 1}-${i + 1}`}
+                  widths={[256, 512, 768]}
+                  sizes="(min-width: 768px) 512px, 256px"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .marquee-track {
+    animation: marquee var(--duration) linear infinite;
+    animation-direction: var(--direction);
+    will-change: transform;
+  }
+  .marquee:hover .marquee-track {
+    /* animation-play-state: paused; */
+  }
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-33.3333%, 0, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>
